@@ -2,7 +2,7 @@ package RailWay.utils;
 
 public class TrainPart {
     int trainId = 0;
-    boolean isTrainPart = false;
+    //boolean isTrainPart = false;
     int length;
     boolean forwConnection;
     boolean backConnection;

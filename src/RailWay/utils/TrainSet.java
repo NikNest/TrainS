@@ -25,7 +25,7 @@ public class TrainSet extends TrainPart implements SpecialIdable {
     @Override
     public String toString() {
         String str = "";
-        if(isTrainPart) str += trainId + " ";
+        if(trainId != 0) str += trainId + " ";
         else str += "none ";
         str += trainsetClass + " " + trainsetName + " " + length + " " + forwConnection + " " + backConnection;
         return str;

@@ -26,7 +26,7 @@ public class Coach extends TrainPart {
     public String toString() {
         String str = "";
         str += id + " ";
-        if(isTrainPart) str += trainId + " ";
+        if(trainId != 0) str += trainId + " ";
         else str += "none ";
         str += type + " " + length + " " + forwConnection + " " + backConnection;
         return str;

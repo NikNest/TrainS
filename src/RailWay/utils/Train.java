@@ -1,20 +1,20 @@
 package RailWay.utils;
 
-import RailWay.Depot;
-import RailWay.utils.TrainPart;
-
-import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 
 public class Train {
     public Train(int trainId) {
      this.trainId = trainId;
+     trainPartsIds = new ArrayList<>();
+     trainPartisCouch = new ArrayList<>();
     }
     int trainId = 0;
     //возможно вообще без этой переменной можно
     static int lastTrainId = 0;
     ArrayList<String> trainPartsIds;
+    ArrayList<Boolean> trainPartisCouch;
 
+    //retrun num for W, smth-smth else
     public String[] getTrainPartsIds() {
         String[] str = new String[trainPartsIds.size()];
         int i = 0;
@@ -24,14 +24,18 @@ public class Train {
         }
         return str;
     }
-
+//    public ArrayList<Boolean> getTranPartsStatuses() {
+//        return (ArrayList<Boolean>) trainPartisCouch.clone();
+//    }
     public int getTrainId() {
         return trainId;
     }
-
-    public void addTrainPart(String trainPartId) {
+    //without W
+    public void addTrainPart(String trainPartId, boolean isCouch) {
         trainPartsIds.add(trainPartId);
+        trainPartisCouch.add(isCouch);
     }
+    //without W
     public String getLastTrainPartId() {
         return trainPartsIds.get(trainPartsIds.size()-1);
     }
@@ -41,14 +45,20 @@ public class Train {
     public static void inrcLastTrainId() {
         lastTrainId++;
     }
-
+    //returns W
     @Override
     public String toString() {
-        String str = Integer.toString(trainId);
+        String str = trainId + " ";
         for(int i = 0; i < trainPartsIds.size()-1; i++) {
-            str += trainPartsIds.get(i) + " ";
+            if(trainPartisCouch.get(i))
+                str += "W" + trainPartsIds.get(i) + " ";
+            else
+                str += trainPartsIds.get(i) + " ";
         }
-        str += trainPartsIds.get(trainPartsIds.size()-1);
+        if(trainPartisCouch.get(trainPartisCouch.size()-1))
+            str += "W" + trainPartsIds.get(trainPartsIds.size()-1);
+        else
+            str += trainPartsIds.get(trainPartsIds.size()-1);
         return str;
     }
 }

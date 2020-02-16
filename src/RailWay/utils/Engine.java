@@ -34,7 +34,7 @@ public class Engine extends TrainPart implements SpecialIdable {
     public String toString() {
         String str = "";
         String shortType = type.equals("electrical") ? "e" : type.equals("diesel") ? "d" : "s";
-        if(isTrainPart) str += trainId + " ";
+        if(trainId != 0) str += trainId + " ";
         else str += "none ";
         str += shortType + " " + engineClass + " " + engineName + " " + length + " " + forwConnection + " " + backConnection;
         return str;

@@ -28,7 +28,7 @@ public class Depot {
         TrainPart engine = new Engine(type, engineClass, engineName, length, forwConnected, backConnected);
         if(trainParts.size()!=0)
         for(TrainPart trainPart : trainParts) {
-            if(trainPart.getClass().equals(SpecialIdable.class)) {
+            if(SpecialIdable.class.isInstance(trainPart)) {
                 if (SpecialIdable.haveSameSpecialId((SpecialIdable) trainPart,(SpecialIdable) engine)) {
                     System.out.println("There is already a trainpart with the same id");
                     return;
@@ -44,7 +44,8 @@ public class Depot {
         TrainPart trainset = new TrainSet(trainsetClass, trainsetName, length, forwConnected, backConnected);
         if(trainParts.size()!=0)
         for(TrainPart trainPart : trainParts) {
-           if(trainPart.getClass().equals(SpecialIdable.class)) {
+           if(SpecialIdable.class.isInstance(trainPart)) {
+
                if (SpecialIdable.haveSameSpecialId((SpecialIdable) trainPart,(SpecialIdable) trainset)) {
                    System.out.println("There is already a trainpart with the same id");
                    return;
@@ -59,7 +60,7 @@ public class Depot {
         Iterator<TrainPart> iter = trainParts.iterator();
         while(iter.hasNext()) {
             TrainPart trainPart = iter.next();
-            if(trainPart.getClass().equals(Engine.class)) {
+            if(Engine.class.isInstance(trainPart)) {
                 str += (Engine)trainPart;
                 if(iter.hasNext())
                     str += "\n";
@@ -74,7 +75,7 @@ public class Depot {
         Iterator<TrainPart> iter = trainParts.iterator();
         while(iter.hasNext()) {
             TrainPart trainPart = iter.next();
-            if(trainPart.getClass() == Coach.class) {
+            if(Coach.class.isInstance(trainPart)) {
                 str += (Coach)trainPart;
                 if(iter.hasNext())
                     str += "\n";
@@ -88,7 +89,7 @@ public class Depot {
         Iterator<TrainPart> iter = trainParts.iterator();
         while(iter.hasNext()) {
             TrainPart trainPart = iter.next();
-            if(trainPart.getClass() == TrainSet.class) {
+            if(TrainSet.class.isInstance(trainPart)) {
                 str += (TrainSet)trainPart;
                 if(iter.hasNext())
                     str += "\n";
@@ -110,7 +111,6 @@ public class Depot {
         }
         return str;
     }
-    //check this method out for 'W'- problem
     public static String sortCouchId(String listTrainParts) {
         String temp[] = listTrainParts.split("\n");
         ArrayList<String> lines = new ArrayList(Arrays.asList(temp));
@@ -124,27 +124,29 @@ public class Depot {
         }
         return str;
     }
-    //
     public void deleteRollingStock(String id) {
         Iterator<TrainPart> iter = trainParts.iterator();
         for(int i = 0; i < trainParts.size(); i++) {
             TrainPart trainpart = iter.next();
-            //means that trainpart is a part of the train
+            //means that trainpart isn't a part of the train
             if (trainpart.getTrainId() == 0) {
-                if (trainpart.getClass().equals(Coach.class)) {
-                    if (((Coach) trainpart).getId() == Integer.parseInt(id)) {
+                if (Coach.class.isInstance(trainpart)) {
+                    if (id.equals(Integer.toString(((Coach) trainpart).getId()))) {
                         trainParts.remove(i);
                         System.out.println("OK");
+                        return;
                     }
-                } else if (trainpart.getClass().equals(Engine.class)) {
-                    if ((((Engine) trainpart).getSpecialClass() + ((Engine) trainpart).getSpecialName()).equals(id)) {
+                } else if (Engine.class.isInstance(trainpart)) {
+                    if ((((Engine) trainpart).getSpecialClass() + "-" + ((Engine) trainpart).getSpecialName()).equals(id)) {
                         trainParts.remove(i);
                         System.out.println("OK");
+                        return;
                     }
-                } else if (trainpart.getClass().equals(TrainSet.class)) {
-                    if ((((TrainSet) trainpart).getSpecialClass() + ((TrainSet) trainpart).getSpecialName()).equals(id)) {
+                } else if (TrainSet.class.isInstance(trainpart)) {
+                    if ((((TrainSet) trainpart).getSpecialClass() + "-" + ((TrainSet) trainpart).getSpecialName()).equals(id)) {
                         trainParts.remove(i);
                         System.out.println("OK");
+                        return;
                     }
                 }
             }
@@ -155,42 +157,48 @@ public class Depot {
     //должен ли id начинаться с 1 или может быть другое начало
     //нужно ли проверять train-set здесь
     //
-    //
-    //
+    //became W-num
     public void addTrainWrap(int trainId, String trainPartId) {
         if(!istrainIdValid(trainId)) {
             System.out.println("Incorrect train id");
+            return;
+        }
+        if(getTrainPart(trainPartId) == null) {
+            System.out.println("Train Part with this Id doesn't exist");
+            return;
+        } else if(getTrainPart(trainPartId).getTrainId() != 0) {
+            System.out.println("Train Part with this id is already in use");
             return;
         }
         //no train-id check
         Iterator<TrainPart> trainPartIterator = trainParts.iterator();
         for (int i = 0; i < trainParts.size(); i++) {
             TrainPart trainPart = trainPartIterator.next();
-            if (trainPart.getClass().equals(Coach.class)) {
-                if (((Coach) trainPart).getId() == Integer.parseInt(trainPartId)) {
+            if (Coach.class.isInstance(trainPart)) {
+                if (trainPartId.equals("W" + ((Coach) trainPart).getId())) {
                     if (addTrain(trainId, trainPartId)) {
                         trainParts.get(i).setTrainId(trainId);
-                        System.out.println(((Coach) trainPart).getType() + " coach W" + trainPartId
-                                + "added to " + trainId);
+                        System.out.println(((Coach) trainPart).getType() + " coach " + trainPartId
+                                + " added to " + trainId);
                         return;
                     } else {
                         System.out.println("Train Parts Connections don't pass");
                         return;
                     }
                 }
-            } else if (trainPart.getClass().equals(Engine.class)) {
+            } else if (Engine.class.isInstance(trainPart)) {
                 if ((((Engine) trainPart).getSpecialClass() + "-" + ((Engine) trainPart).getSpecialName()).equals(trainPartId)) {
                     if (addTrain(trainId, trainPartId)) {
                         trainParts.get(i).setTrainId(trainId);
                         System.out.println(((Engine) trainPart).getType() + " engine " + trainPartId
-                                + "added to " + trainId);
+                                + " added to " + trainId);
                         return;
                     } else {
                         System.out.println("Train Parts Connections don't pass");
                         return;
                     }
                 }
-            } else if (trainPart.getClass().equals(TrainSet.class)) {
+            } else if (TrainSet.class.isInstance(trainPart)) {
                 if ((((TrainSet) trainPart).getSpecialClass() + "-" + ((TrainSet) trainPart).getSpecialName()).equals(trainPartId)) {
                     if (addTrain(trainId, trainPartId)) {
                         trainParts.get(i).setTrainId(trainId);
@@ -204,9 +212,8 @@ public class Depot {
                 }
             }
         }
-        System.out.println("train part with this id wasn't found");
+        System.out.println("you shouldn't see this massage");
     }
-    //Problem with Coach "W3" (the problem concerning W letter)
     public String listTrains() {
         if(trains.size()==0)
             return "No train exists";
@@ -224,27 +231,29 @@ public class Depot {
                 trains.remove(train);
             }
     }
-    //TODO
     public TrainPart getTrainPart(String trainPartId) {
+        if(trainPartId.matches("^W\\d+$"))
+            trainPartId = trainPartId.substring(1);
+
         for(TrainPart trainPart : trainParts) {
-            if(trainPart.getClass().equals(Coach.class))
-                if(((Coach) trainPart).getId() == Integer.parseInt(trainPartId))
+            if(Coach.class.isInstance(trainPart))
+                if(trainPartId.equals(Integer.toString(((Coach) trainPart).getId())))
                     return trainPart;
-            if(trainPart.getClass().equals(Engine.class))
+            if(Engine.class.isInstance(trainPart))
                 if((((Engine) trainPart).getSpecialClass() + "-" + ((Engine) trainPart).getSpecialName()).equals(trainPartId))
                     return trainPart;
-            if(trainPart.getClass().equals(TrainSet.class))
+            if(TrainSet.class.isInstance(trainPart))
                 if((((TrainSet) trainPart).getSpecialClass() + "-" + ((TrainSet) trainPart).getSpecialName()).equals(trainPartId))
                     return trainPart;
         }
-        System.out.println("Train Part waasn't found");
+        System.out.println("Train Part wasn't found");
         return null;
     }
     //returns false if connections dont fit
-    //TODO
-    //arg without W
-    //adds with W
+    //arg with W
     private boolean addTrain(int trainId, String trainPartId) {
+        if(trainPartId.matches("^W\\d$"))
+            trainPartId = trainPartId.substring(1);
         Iterator<Train> iterTrain = trains.iterator();
         //add train part to already existing train
         for(int i = 0; i < trains.size(); i++) {
@@ -252,16 +261,19 @@ public class Depot {
             if(train.getTrainId() == trainId)
                 if (getTrainPart(trains.get(i).getLastTrainPartId()).isBackConnection() &&
                         getTrainPart(trainPartId).isForwConnection()) {
-                    if(getTrainPart(trainPartId).getClass().equals(Coach.class))
-                        trains.get(i).addTrainPart("W" + trainPartId);
+                    if(Coach.class.isInstance(getTrainPart(trainPartId)))
+                        trains.get(i).addTrainPart(trainPartId, true);
                     else
-                        trains.get(i).addTrainPart(trainPartId);
+                        trains.get(i).addTrainPart(trainPartId, false);
                     return true;
                 } else
                     return false;
         }
         Train train = new Train(trainId);
-        train.addTrainPart(trainPartId);
+        if(Coach.class.isInstance(getTrainPart(trainPartId)))
+            train.addTrainPart(trainPartId, true);
+        else
+            train.addTrainPart(trainPartId, false);
         trains.add(train);
         if(trainId == Train.getLastTrainId() + 1)
             Train.inrcLastTrainId();
@@ -290,6 +302,7 @@ public class Depot {
         }
         return Train.getLastTrainId() + 1;
     }
+
     private void freeUsedTrainParts(Train deletedTrain) {
         String trainPartIds[] = deletedTrain.getTrainPartsIds();
         for(String trainPartId : trainPartIds) {

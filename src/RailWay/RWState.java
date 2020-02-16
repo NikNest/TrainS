@@ -36,7 +36,7 @@ public class RWState {
                     track.setEndConnected(true);
                 }
                 //temptrack is Track
-                if (!(temptrack.getClass().equals(SwitchTrack.class))) {
+                if (!(SwitchTrack.class.isInstance(temptrack))) {
                     if (Track.areEndStartConnected(temptrack, track)) {
                         tracks.get(i).setEndConnected(true);
                         track.setStartConnected(true);
@@ -72,7 +72,7 @@ public class RWState {
                     System.out.println("track with the same start or the same end already exists");
                     return;
                 }
-                if (!(temptrack.getClass() == SwitchTrack.class)) {
+                if (!(SwitchTrack.class.isInstance(temptrack))) {
                     if (Track.areEndStartConnected(temptrack, track)) {
                         tracks.get(i).setEndConnected(true);
                         track.setStartConnected(true);
@@ -100,7 +100,7 @@ public class RWState {
         for (int i = 0; i < tracks.size(); i++) {
             Track track = iter.next();
 
-            if(track.getClass().equals(SwitchTrack.class)) {
+            if(SwitchTrack.class.isInstance(track)) {
                 if((((SwitchTrack)track).getId() == id) && (((SwitchTrack)track).getEnd().equals(end))) {
                     ((SwitchTrack) tracks.get(i)).setSwitch(true);
                     System.out.println("OK");
@@ -123,7 +123,7 @@ public class RWState {
         Iterator<Track> iter = tracks.iterator();
         while (iter.hasNext()) {
             Track track = iter.next();
-            if(!(track.getClass() == SwitchTrack.class)) str += track;
+            if(!(SwitchTrack.class.isInstance(track))) str += track;
             else str += (SwitchTrack)track;
             if(iter.hasNext())
                 str += "\n";
