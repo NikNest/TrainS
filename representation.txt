@@ -1,0 +1,80 @@
+Copyright 1993,1998,2014 Toyoda Masashi (mtoyoda@acm.org)
+Everyone is permitted to do anything on this program including copying,
+modifying, and improving, unless you try to pretend that you wrote it
+i.e., the above copyright notice has to appear in all copies.
+THE AUTHOR DISCLAIMS ANY RESPONSIBILITY WITH REGARD TO THIS SOFTWARE.
+
+Modified by SDQ 2020
+
+
+
+____________________
+|  ___ ___ ___ ___ |
+|  |_| |_| |_| |_| |
+|__________________|
+|__________________|
+   (O)        (O)   
+
+
+
+
+|                  |
+|                  |
+|                  |
+|__________________|
+   (O)        (O)   
+
+
+
+
+               ____
+/--------------|  |
+\--------------|  |
+  | |          |  |
+ _|_|__________|  |
+|_________________|
+   (O)       (O)   
+
+
+
+
+     ++      +------
+     ||      |+-+ | 
+   /---------|| | | 
+  + ========  +-+ | 
+ _|--/~\------/~\-+ 
+//// \_/      \_/   
+
+
+
+
+         ++         
+         ||         
+_________||_________
+|  ___ ___ ___ ___ |
+|  |_| |_| |_| |_| |
+|__________________|
+|__________________|
+   (O)        (O)   
+
+
+
+
+               ___    
+                 \    
+  _______________/__  
+ /_| ____________ |_\ 
+/   |____________|   \
+\                    /
+ \__________________/ 
+  (O)(O)      (O)(O)  
+
+
+
+
+  _____________|____  
+ /_| ____________ |_\ 
+/   |____________|   \
+\                    /
+ \__________________/ 
+  (O)(O)      (O)(O)  
