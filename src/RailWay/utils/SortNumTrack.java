@@ -2,7 +2,7 @@ package RailWay.utils;
 
 import java.util.Comparator;
 
-public class SortNumTrack implements Comparator<String> {
+public class SortNumTrack extends SortAlgorithm {
     @Override
     public int compare(String s, String t1) {
         String[] temps = s.split(" ");

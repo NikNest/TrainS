@@ -130,20 +130,7 @@ public class RWState {
         }
         if (str.equals(""))
             str = "No track exists";
-        return sortTrackId(str);
-    }
-    public String sortTrackId(String listTracks) {
-        String temp[] = listTracks.split("\n");
-        ArrayList<String> lines = new ArrayList(Arrays.asList(temp));
-        Collections.sort(lines, new SortNumTrack());
-        String str = "";
-        Iterator<String> iter = lines.iterator();
-        while(iter.hasNext()) {
-            str += iter.next();
-            if(iter.hasNext())
-                str += "\n";
-        }
-        return str;
+        return Sorter.sortList(str, new SortNumTrack());
     }
     //add delete track check that no trains stay
     public void deleteTrack(int trackId) {

@@ -45,6 +45,12 @@ public class Train {
     public static void inrcLastTrainId() {
         lastTrainId++;
     }
+//    public String showTrain() {
+//
+//        for(String trainPartId : trainPartsIds) {
+//            Depot.
+//        }
+//    }
     //returns W
     @Override
     public String toString() {
