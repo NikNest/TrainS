@@ -5,66 +5,61 @@ import java.util.ArrayList;
 public class Train {
     public Train(int trainId) {
      this.trainId = trainId;
-     trainPartsIds = new ArrayList<>();
-     trainPartisCouch = new ArrayList<>();
+     trainParts = new ArrayList<>();
     }
     int trainId = 0;
     //возможно вообще без этой переменной можно
-    static int lastTrainId = 0;
-    ArrayList<String> trainPartsIds;
-    ArrayList<Boolean> trainPartisCouch;
+//    static int lastTrainId = 0;
+    ArrayList<TrainPart> trainParts;
 
-    //retrun num for W, smth-smth else
-    public String[] getTrainPartsIds() {
-        String[] str = new String[trainPartsIds.size()];
-        int i = 0;
-        for(String trainPartId : trainPartsIds) {
-            str[i] = trainPartId;
-            i++;
-        }
-        return str;
-    }
-//    public ArrayList<Boolean> getTranPartsStatuses() {
-//        return (ArrayList<Boolean>) trainPartisCouch.clone();
+
+//    //retrun num for W, smth-smth else
+//    public ArrayList<TrainPart> getTrainParts() {
+//        return trainParts;
 //    }
+
     public int getTrainId() {
         return trainId;
     }
-    //without W
-    public void addTrainPart(String trainPartId, boolean isCouch) {
-        trainPartsIds.add(trainPartId);
-        trainPartisCouch.add(isCouch);
+    public void addTrainPart(TrainPart trainPart) {
+        //trainPart.setTrainId(this.trainId);
+        trainParts.add(trainPart);
     }
-    //without W
-    public String getLastTrainPartId() {
-        return trainPartsIds.get(trainPartsIds.size()-1);
+    public TrainPart getLastTrainPart() {
+        return trainParts.get(trainParts.size()-1);
     }
-    public static int getLastTrainId() {
-        return lastTrainId;
-    }
-    public static void inrcLastTrainId() {
-        lastTrainId++;
-    }
-//    public String showTrain() {
-//
-//        for(String trainPartId : trainPartsIds) {
-//            Depot.
-//        }
+
+//    public static int getLastTrainId() {
+//        return lastTrainId;
 //    }
+//    public static void inrcLastTrainId() {
+//        lastTrainId++;
+//    }
+
+    public void freeUsedTrainParts() {
+        trainParts.stream().forEach(tp -> tp.setTrainId(0));
+        trainParts.clear();
+    }
     //returns W
     @Override
     public String toString() {
         String str = trainId + " ";
-        for(int i = 0; i < trainPartsIds.size()-1; i++) {
-            if(trainPartisCouch.get(i))
-                str += "W" + trainPartsIds.get(i) + " ";
+        for(int i = 0; i < trainParts.size()-1; i++) {
+            if(Coach.class.isInstance(trainParts.get(i)))
+                str += "W" + ((Coach)trainParts.get(i)).getId() + " ";
             else
-                str += trainPartsIds.get(i) + " ";
+                str += ((SpecialIdable)trainParts.get(i)).getSpecialClass() + "-" +
+                        ((SpecialIdable)trainParts.get(i)).getSpecialName() +  " ";
         }
-        if(trainPartisCouch.get(trainPartisCouch.size()-1))
-            str += "W" + trainPartsIds.get(trainPartsIds.size()-1);
+        if(Coach.class.isInstance(trainParts.get(trainParts.size() - 1)))
+            str += "W" + ((Coach)trainParts.get(trainParts.size() - 1)).getId();
         else
-            str += trainPartsIds.get(trainPartsIds.size()-1);
+            str += ((SpecialIdable)trainParts.get(trainParts.size() - 1)).getSpecialClass() + "-" +
+                    ((SpecialIdable)trainParts.get(trainParts.size() - 1)).getSpecialName();
         return str;
+    }
+
+    public String showTrain() {
+        return null;
     }
 }

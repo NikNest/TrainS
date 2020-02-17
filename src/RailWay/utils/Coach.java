@@ -1,19 +1,20 @@
 package RailWay.utils;
 
 public class Coach extends TrainPart {
-    public Coach(String coachType, int length, boolean forwConnected, boolean backConnected) {
+    public Coach(String coachType, int length, boolean forwConnected, boolean backConnected, int id) {
         //this.trainPartType = "coach";
         this.type = coachType;
         this.length = length;
         this.forwConnection = forwConnected;
         this.backConnection = backConnected;
+        this.id = id;
     }
     String type;
     int id;
     static int lastCoachId = 0;
-    public void initId() {
-        this.id = ++lastCoachId;
-    }
+//    public void initId() {
+//        this.id = ++lastCoachId;
+//    }
     public int getId() {
         return id;
     }
