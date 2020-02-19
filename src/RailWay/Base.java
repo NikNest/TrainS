@@ -5,4 +5,7 @@ public class Base {
         this.num = num;
     }
     public int num;
+    public void f() {
+        System.out.println(num);
+    }
 }

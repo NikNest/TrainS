@@ -2,18 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b7767bb-5664-4ed4-aceb-16fc00a675fa" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/RailWay/utils/TrainOnRoad.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/Launcher.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Base.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Base.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Depot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Depot.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWState.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Son.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Son.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SwitchTrack.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SwitchTrack.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Track.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Track.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Train.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Train.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainPart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainPart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainRepres.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainRepres.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Launcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/RailWay/Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/Base.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/RailWay/Depot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/Depot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/RWState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/RWState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/RailWay/Son.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/Son.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Coach.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/Coach.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SwitchTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/SwitchTrack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/Track.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/Train.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainPart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/TrainPart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainRepres.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/TrainRepres.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,49 +94,53 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="588" y="214" width="800" height="677" key="#Auto_Import/67.27.1853.1053@67.27.1853.1053" timestamp="1581588976056" />
-    <state x="801" y="264" width="374" height="577" key="#com.intellij.ide.util.MemberChooser" timestamp="1581873914112">
+    <state x="588" y="214" width="800" height="677" key="#Inspections" timestamp="1582022812090">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="801" y="264" width="374" height="577" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1581873914112" />
+    <state x="588" y="214" width="800" height="677" key="#Inspections/67.27.1853.1053@67.27.1853.1053" timestamp="1582022812090" />
+    <state x="801" y="264" width="374" height="577" key="#com.intellij.ide.util.MemberChooser" timestamp="1582118205852">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="801" y="264" width="374" height="577" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1582118205852" />
     <state x="834" y="444" width="308" height="216" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1581500896123">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="834" y="444" width="308" height="216" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1581500896123" />
-    <state x="745" y="160" width="476" height="786" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1581501899473">
+    <state x="745" y="160" width="476" height="786" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1582115021211">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="745" y="160" width="476" height="786" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1581501899473" />
-    <state width="1807" height="352" key="GridCell.Tab.0.bottom" timestamp="1581939775780">
+    <state x="745" y="160" width="476" height="786" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1582115021211" />
+    <state width="1807" height="195" key="GridCell.Tab.0.bottom" timestamp="1582131757611">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="352" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581939775780" />
-    <state width="1807" height="352" key="GridCell.Tab.0.center" timestamp="1581939775779">
+    <state width="1807" height="195" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1582131757611" />
+    <state width="1807" height="195" key="GridCell.Tab.0.center" timestamp="1582131757610">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="352" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581939775779" />
-    <state width="1807" height="352" key="GridCell.Tab.0.left" timestamp="1581939775779">
+    <state width="1807" height="195" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1582131757610" />
+    <state width="1807" height="195" key="GridCell.Tab.0.left" timestamp="1582131757610">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="352" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581939775779" />
-    <state width="1807" height="352" key="GridCell.Tab.0.right" timestamp="1581939775779">
+    <state width="1807" height="195" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1582131757610" />
+    <state width="1807" height="195" key="GridCell.Tab.0.right" timestamp="1582131757611">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="352" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581939775779" />
+    <state width="1807" height="195" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1582131757611" />
     <state x="482" y="187" key="SettingsEditor" timestamp="1581845540289">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1581845540289" />
-    <state x="649" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1581926919049">
+    <state x="649" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1582098324077">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="649" y="380" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1581926919049" />
+    <state x="649" y="380" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1582098324077" />
     <state x="657" y="253" key="run.anything.popup" timestamp="1581776667855">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="657" y="253" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1581776667855" />
-    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1581752422783">
+    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1582129385697">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1581752422783" />
+    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1582129385697" />
   </component>
 </project>

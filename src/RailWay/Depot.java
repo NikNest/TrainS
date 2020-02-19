@@ -171,6 +171,7 @@ public class Depot {
         str += trains.get(trains.size() - 1);
         return Sorter.sortList(str, new SortTrains());
     }
+    //TODO удаляет поезд с жд
     public void deleteTrain(int trainId) {
         for (Train train: trains)
             if (train.getTrainId() == trainId) {
@@ -204,9 +205,18 @@ public class Depot {
             System.out.println(trainToPrint.get().showTrain());
         else
             System.out.println("Wrong Train Id");
+
+    }
+    //use this method for train finding
+    public Train getTrain(int trainId) {
+        for(Train train : trains) {
+            if(train.getTrainId() == trainId)
+                return train;
+        }
+        System.out.println("Train not found");
+        return null;
     }
     //returns false if connections dont fit
-    //arg with W
     private boolean connectTrainPart(int trainId, TrainPart trainPart) {
 
         Iterator<Train> iterTrain = trains.iterator();

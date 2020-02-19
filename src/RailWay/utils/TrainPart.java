@@ -10,7 +10,9 @@ public class TrainPart {
 //    public String getTrainPartType() {
 //        return trainPartType;
 //    }
-
+    public int getLength() {
+        return length;
+    }
 
     public boolean isForwConnection() {
         return forwConnection;
