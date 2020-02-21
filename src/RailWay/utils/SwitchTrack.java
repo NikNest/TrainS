@@ -8,6 +8,13 @@ public class SwitchTrack extends Track{
     boolean firstendConnected;
     boolean secondendConnected;
 
+    public void setFirstendConnected(boolean state) {
+        firstendConnected = state;
+    }
+    public void setSecondendConnected(boolean state) {
+        secondendConnected = state;
+    }
+
     public SwitchTrack(Point start, Point end, Point end2) {
         //rewrite super
         super(start);
@@ -50,6 +57,10 @@ public class SwitchTrack extends Track{
             firstendConnected = secondendConnected;
             secondendConnected = flag;
         }
+    }
+
+    public void unsetDirection() {
+        switchSetted = false;
     }
 
     @Override

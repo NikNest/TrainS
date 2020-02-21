@@ -106,6 +106,11 @@ public class Track {
                 && (this.end == ((Track)obj).start || this.end == ((Track)obj).end);
     }
 
+    @Override
+    public int hashCode() {
+        return getId();
+    }
+
     //TODO
     public Point getNextPoint(Point lastPoint, boolean directionToStart) {
 

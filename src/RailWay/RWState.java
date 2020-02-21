@@ -13,6 +13,92 @@ public class RWState {
     }
     ArrayList<Track> tracks;
     ArrayList<TrainOnRoad> trains;
+    public void step(short speed) {
+        HashMap<TrainOnRoad, Boolean> movingTrains = new HashMap<>();
+        if (trains.size() == 0) {
+            System.out.println("OK");
+            return;
+        }
+        for(TrainOnRoad train : trains) {
+            boolean outOfTracks = crashWithTracksHappens(move(train));
+            movingTrains.put(train, outOfTracks);
+        }
+        ArrayList<ArrayList<Integer>> crashes = findCrashes(movingTrains);
+        String str = createStepString(crashes);
+        System.out.println(str);
+        removeCrashedTrains(crashes);
+    }
+    private boolean crashWithTracksHappens(TrainOnRoad train) {
+
+    }
+    private TrainOnRoad move(TrainOnRoad train) {
+        ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
+        int i = 0;
+        for(Track track : field) {
+            if(track.getId() == train.getTrackHead().getId())
+                break;
+            i++;
+        }
+        field.remove(i);
+        ArrayList<Track> forwardRoad;
+        int trainLength;
+        //важно что тк здесь береться ендед стракт со стартпоинта а не с поинта хэда то длина должна быть меньше (старт - хэдпоинт)
+        if(train.isStartDirection()) {
+            forwardRoad = getEndedStruct(field, train.getTrackHead().getStart(), 0);
+            trainLength = train.getLength() - Math.abs(train.getTrackHead().getStart().getX() + train.getTrackHead().getStart().getY()
+                    - train.getPositionHead().getX() - train.getPositionHead().getY());
+        } else {
+            forwardRoad = getEndedStruct(field, train.getTrackHead().getEnd(), 0);
+            trainLength = train.getLength() - Math.abs(train.getTrackHead().getEnd().getX() + train.getTrackHead().getEnd().getY()
+                    - train.getPositionHead().getX() - train.getPositionHead().getY());
+        }
+        i = 0;
+        for (Track track : forwardRoad) {
+            if (trainLength > 0) {
+                i++;
+                trainLength -= track.getLength();
+            }
+        }
+        Track newHeadTrack = forwardRoad.get(i);
+        //could be mistake if i == 0
+        Track trackBeforeHead = forwardRoad.get(i-1);
+        boolean startDirection;
+        if(newHeadTrack.getCommonPoint(trackBeforeHead).equals(newHeadTrack.getStart()))
+            startDirection = true;
+        else
+            startDirection = false;
+        Point newHeadPoint;
+        if(newHeadTrack.getSameCoord() == newHeadTrack.getStart().getX())
+        {
+            if(startDirection)
+                newHeadPoint = new Point(newHeadTrack.getStart().getX(),
+                    newHeadTrack.getEnd().getY() + newHeadTrack.getLength() + trainLength);
+            else
+                newHeadPoint = new Point(newHeadTrack.getStart().getX(),
+                        newHeadTrack.getStart().getY() + newHeadTrack.getLength() + trainLength);
+        } else {
+            if(startDirection)
+                newHeadPoint = new Point(newHeadTrack.getEnd().getX() + newHeadTrack.getLength() + trainLength,
+                        newHeadTrack.getStart().getY());
+            else
+                newHeadPoint = new Point(newHeadTrack.getStart().getX() + newHeadTrack.getLength() + trainLength,
+                        newHeadTrack.getStart().getY());
+        }
+        return new TrainOnRoad(train.getTrain(), newHeadTrack, startDirection, newHeadPoint);
+    }
+    //returns id of trains
+    //needed to be sorted
+    //crashes with tracks too
+    private ArrayList<ArrayList<Integer>> findCrashes(HashMap<TrainOnRoad, Boolean> movingTrains) {
+
+        return new ArrayList<>();
+    }
+    private String createStepString(ArrayList<ArrayList<Integer>> idsCrashes) {
+
+    }
+    private void removeCrashedTrains(ArrayList<ArrayList<Integer>> crashes) {
+
+    }
     public void addTrack(Point start, Point end) {
         if (!start.equals(end) && ((start.getY() == end.getY()) || (start.getX() == end.getX()))) {
             Track temp = new Track(start, end);
@@ -75,15 +161,11 @@ public class RWState {
                     return;
                 }
                 if(((SwitchTrack)track).getEnd2().equals(end) || track.getEnd().equals(end) || track.getStart().equals(end)) {
-                    if (isRWValidIfSwitchSetted(id, end)) {
                         ((SwitchTrack) track).setDirection(end);
                         System.out.println("OK");
                         return;
-                    } else  {
-                        System.out.println("not valid switch");
-                    }
-                    return;
                 } else {
+
                     System.out.println("wrong switch point");
                     return;
                 }
@@ -96,7 +178,7 @@ public class RWState {
         Iterator<Track> iter = tracks.iterator();
         while (iter.hasNext()) {
             Track track = iter.next();
-            if(!(track instanceof SwitchTrack)) str += track;
+            if(!(SwitchTrack.class.isInstance(track))) str += track;
             else str += (SwitchTrack)track;
             if(iter.hasNext())
                 str += "\n";
@@ -108,17 +190,26 @@ public class RWState {
     //TODO
     //add delete track check that no trains stay
     public void deleteTrack(int trackId) {
-        Iterator<Track> iter = tracks.iterator();
-        for(int i = 0; i < tracks.size(); i++) {
-            Track track = iter.next();
+        for(Track track : tracks) {
             if(trackId == track.getId()) {
-                if(track.isStartConnected() && track.isEndConnected()) {
-                    System.out.println("track with this id is found but is two side connected");
+                if(isRWValidIfTrackDeleted(track)) {
+                    System.out.println("TRACK TO REMOVE: " + track.getId());
+                    for (Track track1 : tracks) {
+                        System.out.print(track1.getId() + " ");
+                    }
+
+                    removeConnections(track);
+                    int i = 0;
+                    for (Track track1 : tracks) {
+                        if (track1.getId() == track.getId())
+                            break;
+                        i++;
+                    }
+                    tracks.remove(i);
+                    System.out.println("OK");
                     return;
                 }
-                removeConnections(track.getStart(), track.getEnd());
-                tracks.remove(i);
-                System.out.println("OK");
+                System.out.println("track with this id couldn't be deleted");
                 return;
             }
         }
@@ -134,54 +225,176 @@ public class RWState {
                 }
             }
         }
-        if(!pointFrom.equals(direction) && (pointFrom.getX() == direction.getX()) || (pointFrom.getY() == direction.getY()))
+        if(!pointFrom.equals(direction) && ((pointFrom.getX() == direction.getX()) || (pointFrom.getY() == direction.getY())))
         {
             if (train.isTrainValid()) {
+                //проверить как находит на углах
                     Track track = findTrack(pointFrom, direction);
+//                    System.out.println("TRACK DETERMINED: " + track.getId());
                     if(track == null) {
-                        System.out.println("no track found");
+                        System.out.println("track not found");
                         return;
                     }
-                    TrainOnRoad trainOnRoad = new TrainOnRoad(train, track, isStartDirection(track, direction), pointFrom);
-                    int totalRWLength = 0;
-                    for(Track tempTrack : tracks) {
-                        totalRWLength += tempTrack.getLength();
+                    TrainOnRoad trainOnRoad = new TrainOnRoad(train, track, isStartDirection(track, pointFrom, direction), pointFrom);
+                    ArrayList<Track> temp = (ArrayList<Track>) tracks.clone();
+                    //changing direction for reverse search, counting the length on the track
+                    int availableTracksLength;
+                    if (isStartDirection(track, pointFrom, direction)) {
+                        direction = track.getEnd();
+                        availableTracksLength = Math.abs(pointFrom.getX() + pointFrom.getY()
+                                - track.getEnd().getX() - track.getEnd().getY());
+
+                    } else {
+                        direction = track.getStart();
+                        availableTracksLength = Math.abs(pointFrom.getX() + pointFrom.getY()
+                                - track.getStart().getX() - track.getStart().getY());
                     }
-                    if(totalRWLength<train.getTrainLength()) {
-                        System.out.println("Train is larger then the hall RW");
+                    int i = 0;
+                    for(Track track1 : tracks) {
+//                        System.out.println("DIR: " + direction + " Start: " + track1.getStart() + " End: " + track1.getEnd());
+//                        if(!track1.equals(track) && (track1.getStart().equals(direction) || track1.getEnd().equals(direction))) {
+//                            System.out.println("TRACK: " + track1.getId());
+//                            break;
+//                        }
+                        if (track1.getId() == track.getId()) {
+                            break;
+                        }
+                        i++;
+
+                    }
+                    temp.remove(i);
+
+//                    System.out.println("ENDED TRACK SEARCH: ");
+//                    for(Track track1 : temp) {
+//                        System.out.print(track1.getId() + " ");
+//                    }
+//                System.out.println("\nDIRECTION SEARCH: " + direction);
+                    ArrayList<Track> endedStruct = getEndedStruct(temp, direction, 0);
+                    endedStruct = removeCopies(endedStruct);
+
+//                System.out.print("ENDED TRACK: ");
+                    for(Track track1 : endedStruct) {
+//                        System.out.print(track1.getId() + " ");
+                        availableTracksLength += track1.getLength();
+                    }
+//                    System.out.println("\nLength: " + availableTracksLength);
+
+                    if(availableTracksLength < train.getTrainLength()) {
+                        System.out.println("there are not enogh place for this train");
                         return;
                     }
-                    //check that the space is free
                     for(TrainOnRoad tempTrainOnRoad : trains) {
-                        if(crossHappens(tempTrainOnRoad, trainOnRoad)) {
-                            System.out.println("there is a train already on these points");
+                        if(haveCommonTracks(tempTrainOnRoad, trainOnRoad)) {
+                            System.out.println("there is a train already on these tracks");
                             return;
                         }
                     }
                     trains.add(trainOnRoad);
+                    System.out.println("OK");
 
-                }
+                } else {
+                System.out.println("Train isn't valid");
+            }
         } else {
             System.out.println("wrong direction");
         }
     }
-    //vorausgesetzt dass der Punkt auf der Strecke vom Track liegt
-    private boolean isStartDirection(Track track, Point direction) {
-        return Math.abs(direction.getX() - track.getEnd().getX() + direction.getY() - track.getEnd().getY()) >
-                Math.abs(direction.getX() - track.getStart().getX() + direction.getY() - track.getStart().getY());
+    private ArrayList<Track> removeCopies(ArrayList<Track> overextendedField) {
+        Set<Track> set = new LinkedHashSet<>(overextendedField);
+//        System.out.println("Set reading: ");
+//        for(Track track : set) {
+//            System.out.print(track.getId() + " ");
+//        }
+//        System.out.println();
+        return new ArrayList<>(set);
     }
-    //
+    //vorausgesetzt dass der Punkt auf der Strecke vom Track liegt
+    private boolean isStartDirection(Track track, Point pointfrom, Point direction) {
+        int dirstart = track.getStart().getY() + track.getStart().getX() - pointfrom.getX() - pointfrom.getY() >= 0 ? 1 : 0;
+        int dirdir = direction.getX() + direction.getY() - pointfrom.getX() - pointfrom.getY() >= 0 ? 1 : 0;
+        return dirstart == dirdir;
+    }
     private Track findTrack(Point pointFrom, Point direction) {
         for(Track track : tracks) {
             if(pointBelongsTrack(pointFrom, track)) {
-                float dirTrack =  (track.getEnd().getX() - track.getStart().getX() + track.getEnd().getY() - track.getStart().getY()) > 0 ? 1 : -1;
-                float dirSetted = (direction.getX() - pointFrom.getX() + direction.getY() - pointFrom.getY()) > 0 ? 1 : -1;
+                boolean dirTrack = track.getEnd().getY() == track.getStart().getY();
+                boolean dirSetted = pointFrom.getY() == direction.getY();
                 if(dirTrack == dirSetted)
                     return track;
+//                System.out.println("Point : " + pointFrom + " belongs to the track: " + track.getId());
+//                System.out.println(dirTrack + " " + dirSetted);
             }
         }
         return null;
     }
+    //for put
+    public boolean haveCommonTracks(TrainOnRoad trainOnRoad1, TrainOnRoad trainOnRoad2) {
+        if(crossHappens(trainOnRoad1, trainOnRoad2))
+            return true;
+        ArrayList<Track> tracksOfFirst = new ArrayList<>();
+        ArrayList<Track> tracksOfSecond = new ArrayList<>();
+        ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
+        int i = 0;
+        for(Track track1 : field) {
+            if(track1.getId() == trainOnRoad1.getTrackHead().getId())
+                break;
+            i++;
+        }
+        field.remove(i);
+        ArrayList<Track> endedStructFirst = trainOnRoad1.isStartDirection() ? getEndedStruct(field, trainOnRoad1.getTrackHead().getEnd(), 0) :
+                getEndedStruct(field, trainOnRoad1.getTrackHead().getStart(), 0);
+        Collections.reverse(endedStructFirst);
+
+        int firstTrainsLength = trainOnRoad1.getLength() - trainOnRoad1.getLengthHead();
+        for(Track track1 : endedStructFirst) {
+            if(firstTrainsLength > 0) {
+                firstTrainsLength -= track1.getLength();
+                tracksOfFirst.add(track1);
+            }
+        }
+        field = (ArrayList<Track>) tracks.clone();
+        i = 0;
+        for(Track track1 : field) {
+            if(track1.getId() == trainOnRoad2.getTrackHead().getId())
+                break;
+            i++;
+        }
+        field.remove(i);
+        ArrayList<Track> endedStructSecond = trainOnRoad2.isStartDirection() ? getEndedStruct(field, trainOnRoad2.getTrackHead().getEnd(), 0) :
+                getEndedStruct(field, trainOnRoad2.getTrackHead().getStart(), 0);
+        Collections.reverse(endedStructSecond);
+
+        int secondTrainsLength = trainOnRoad2.getLength() - trainOnRoad2.getLengthHead();
+        for(Track track1 : endedStructSecond) {
+            if(firstTrainsLength > 0) {
+                secondTrainsLength -= track1.getLength();
+                tracksOfSecond.add(track1);
+            }
+        }
+        tracksOfFirst.add(trainOnRoad1.getTrackHead());
+//        System.out.println("\nTracks of first train: ");
+//        for (Track track1 : tracksOfFirst) {
+//            System.out.print(track1.getId() + " ");
+//        }
+        tracksOfSecond.add(trainOnRoad2.getTrackHead());
+//        System.out.println("\nTracks of second train: ");
+//        for (Track track1 : tracksOfSecond) {
+//            System.out.print(track1.getId() + " ");
+//        }
+        for(Track track1 : tracksOfFirst) {
+            for (Track track2 : tracksOfSecond) {
+                boolean areConnected = track1.getStart().equals(track2.getStart()) || track1.getStart().equals(track2.getEnd()) ||
+                        track1.getEnd().equals(track2.getStart()) || track1.getEnd().equals(track2.getEnd());
+                if (areConnected && firstTrainsLength == 0 && secondTrainsLength == 0)
+                    return true;
+                if (track1.getId() == track2.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    //for step
     public boolean crossHappens(TrainOnRoad trainOnRoad1, TrainOnRoad trainOnRoad2) {
         ArrayList<Point> coordsOfFirst = new ArrayList<>();
         ArrayList<Point> coordsOfSecond = new ArrayList<>();
@@ -251,14 +464,17 @@ public class RWState {
     }
     //works when switch are setted
     private boolean pointBelongsTrack(Point point, Track track) {
-        if(track.getSameCoord() == point.getX() || track.getSameCoord() == point.getY()) {
-            if(track.getFromCoord() < point.getY() && point.getY() < track.getToCoord()) {
-                return true;
-            } else return track.getFromCoord() < point.getX() && point.getX() < track.getToCoord();
-        }
-        return false;
+        if(track.getSameCoord() == point.getX()) {
+            int trackLength = Math.abs(track.getEnd().getY() - track.getStart().getY());
+            return Math.abs(point.getY() - track.getEnd().getY()) <= trackLength
+                    && Math.abs(point.getY() - track.getStart().getY()) <= trackLength;
+        } else if (track.getSameCoord() == point.getY()) {
+            int trackLength = Math.abs(track.getEnd().getX() - track.getStart().getX());
+            return Math.abs(point.getX() - track.getEnd().getX()) <= trackLength
+                    && Math.abs(point.getX() - track.getStart().getX()) <= trackLength;
+        } else
+            return false;
     }
-
     private void initTrackId(Track track) {
         if(track.getId()==0) {
             int id = 0;
@@ -269,227 +485,328 @@ public class RWState {
             track.setId(++id);
         }
     }
-    private boolean isRWValidIfSwitchSetted(int switchTrackid, Point end) {
+    private boolean isRWValidIfTrackDeleted(Track track) {
         ArrayList<Track> tempTracks = (ArrayList<Track>) tracks.clone();
-        //seting up switch in clone array list
-        for(Track track : tempTracks) {
-            if(track.getId() == switchTrackid) {
-                ((SwitchTrack)track).setDirection(end);
-            }
-        }
-        ArrayList<Track> searchStartDirection;
-        ArrayList<Track> searchEndDirection;
+        int i = 0;
 
-        Track track = tempTracks.get(0);
-        tempTracks.remove(track);
-        Point lastTrackPoint = track.getStart();
-        searchStartDirection = getEndedStruct(tempTracks, lastTrackPoint, 0);
-        lastTrackPoint = track.getEnd();
-        searchEndDirection = getEndedStruct(tempTracks, lastTrackPoint, 0);
-        ArrayList<Track> endedStruct = combineEndedStructs(searchEndDirection, searchStartDirection);
+        for(Track track1 : tempTracks) {
+            if(track1.getId() == track.getId())
+                break;
+            i++;
+        }
+
+        tempTracks.remove(i);
+        ArrayList<Track> endedStruct;
+        if(SwitchTrack.class.isInstance(track)) {
+            Point direction1 = track.getEnd();
+            Point direction2 = track.getStart();
+            Point direction3 = null;
+            if(!((SwitchTrack)track).isSwitchSetted())
+                direction3 = ((SwitchTrack)track).getEnd2();
+
+            ArrayList<Track> dir1struct = getEndedStruct(tempTracks, direction1, 0);
+            ArrayList<Track> dir2struct = getEndedStruct(tempTracks, direction2, 0);
+            ArrayList<Track> dir3struct = getEndedStruct(tempTracks, direction3, 0);
+            endedStruct = combineEndedStructs(dir3struct, combineEndedStructs(dir1struct, dir2struct));
+        } else {
+            Point direction1 = track.getStart();
+            Point direction2 = track.getEnd();
+            endedStruct = combineEndedStructs(getEndedStruct(tempTracks, direction1, 0), getEndedStruct(tempTracks, direction2, 0));
+        }
         endedStruct.add(track);
-        System.out.println(":");
-        for (Track track1 : searchEndDirection) {
-            System.out.print(track1.getId() + " ");
+
+
+        tempTracks = (ArrayList<Track>) tracks.clone();
+        //remove track
+        tempTracks.remove(i);
+        ArrayList<Track> endedStructCheck = getEndedStruct(tempTracks, track.getStart(), 0);
+        if (endedStructCheck.size() == 0)
+            return true;
+        else {
+            endedStructCheck.add(track);
+//            System.out.println("FOUND: ");
+//            for(Track track1 : endedStructCheck) {
+//                System.out.print(track1.getId() + " ");
+//            }
+//            System.out.println("\nCHECK: ");
+//            for(Track track1 : endedStruct) {
+//                System.out.print(track1.getId() + " ");
+//            }
+            return areSameRWStructs(endedStruct, endedStructCheck);
         }
-        for (Track track1 : searchStartDirection) {
-            System.out.print(track1.getId() + " ");
+//        System.out.println(":");
+//        System.out.println("\nstruct:");
+//        for (Track track1 : endedStruct) {
+//            System.out.print(track1.getId() + " ");
+//        }
+//        System.out.println();
+//        for (Track track1 : tracks) {
+//            System.out.print(track1.getId() + " ");
+//        }
+//        System.out.println();
+    }
+    private boolean isPartOf(ArrayList<Track> endedStruct, ArrayList<ArrayList<Track>> endedStructs) {
+        for(ArrayList<Track> temp : endedStructs) {
+            if(!areSameRWStructs(temp, endedStruct))
+                return false;
         }
-        System.out.println();
-        for (Track track1 : tracks) {
-            System.out.print(track1.getId() + " ");
+        return true;
+    }
+    private ArrayList<ArrayList<Track>> getEndedStructsOfRW() {
+        ArrayList<ArrayList<Track>> endedStructs = new ArrayList<>();
+        ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
+        for(Track track : field) {
+            ArrayList<Track> tempField = (ArrayList<Track>) tracks.clone();
+//            System.out.println("\nTRACK ES: " + track.getId());
+//            tempField.remove(tempField.indexOf(track));
+            int i = 0;
+            for (Track track1 : tempField) {
+                if (track1.getId() == track.getId())
+                    break;
+                i++;
+            }
+            tempField.remove(i);
+            tempField = combineEndedStructs(getEndedStruct(tempField, track.getStart(), 0),
+                    getEndedStruct(tempField, track.getEnd(), 0));
+            tempField.add(track);
+//            System.out.println("ES: ");
+//            for(Track track1 : tempField) {
+//                System.out.print(track1.getId() + " ");
+//            }
+//            endedStructs.add(tempField);
+            if(endedStructs != null)
+            for(ArrayList<Track> temp : endedStructs) {
+                if(!areSameRWStructs(temp, tempField)) {
+                    endedStructs.add(tempField);
+                    break;
+                }
+            }
+            else
+                endedStructs.add(tempField);
         }
-        System.out.println();
-        return areSameRWStructs(tracks, endedStruct);
+        return endedStructs;
     }
     private boolean areSameRWStructs(ArrayList<Track> struct1, ArrayList<Track> struct2) {
-        if((struct1 == null && struct2 != null) || (struct1 != null && struct2 == null))
+        if(struct1 == null || struct2 == null)
             return false;
-        if(struct1 == null && struct2 == null)
-            return true;
-        return struct1.containsAll(struct2) && struct2.containsAll(struct1);
+
+        for(Track track1 : struct1) {
+            boolean common = false;
+            for(Track track2 : struct2) {
+                if(track1.getId()==track2.getId())
+                    common = true;
+            }
+            if(!common)
+                return false;
+        }
+        for(Track track2 : struct2) {
+            boolean common = false;
+            for(Track track1 : struct1) {
+                if(track1.getId()==track2.getId())
+                    common = true;
+            }
+            if(!common)
+                return false;
+        }
+        return true;
     }
     private ArrayList<Track> combineEndedStructs(ArrayList<Track> struct1, ArrayList<Track> struct2) {
+        if(struct1 == null)
+            return struct2;
+        else if(struct2 == null)
+            return struct1;
         Set<Track> set = new LinkedHashSet<>(struct1);
         set.addAll(struct2);
         return new ArrayList<>(set);
     }
     //there are no track from one side of the point
     //=> we dont need track as an argument
-    private ArrayList<Track> getEndedStruct(ArrayList<Track> field, Point direction, int depth) {
-        System.out.println("g" + depth);
-        for(Track track : field) {
-            System.out.print(track.getId() + " ");
-        }
-        System.out.println();
+    //переписать или проверить вевести логику. нормальный вывод а не буквы
+    public ArrayList<Track> getTracks() {
+        return tracks;
+    }
+    public ArrayList<Track> getEndedStruct(ArrayList<Track> field, Point lastPoint, int depth) {
+//        System.out.println("g" + depth);
+//        for(Track track : field) {
+//            System.out.print(track.getId() + " ");
+//        }
+//        System.out.println();
         if(field.size()==0)
             return new ArrayList<>();
+        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
         for(Track tempTrack : field) {
             if (SwitchTrack.class.isInstance(tempTrack)) {
                 if(((SwitchTrack) tempTrack).isSwitchSetted()) {
-                    if (((SwitchTrack) tempTrack).getStart().equals(direction)) {
-                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+                    if (((SwitchTrack) tempTrack).getStart().equals(lastPoint)) {
+//                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
                         int i = 0;
-                        Point direction1 = null;
+                        Point direction1 = tempTrack.getEnd();
                         for(Track trackInTemp : temp) {
                             if(trackInTemp.getId() == tempTrack.getId()) {
-                                direction1 = trackInTemp.getEnd();
                                 break;
                             }
                             i++;
                         }
-//                        System.out.println("a");
-//                        for(Track track : temp) {
-//                            System.out.print(track.getId() + " ");
-//                        }
-//                        System.out.println();
-//                        System.out.println(temp.size() + " remove\n");
+//                        System.out.println("switch setted, end " + tempTrack.getId());
                         temp.remove(i);
-//                        System.out.println(temp.size());
-                        return getEndedStruct(temp, direction1, ++depth);
-                    } else if (((SwitchTrack) tempTrack).getEnd().equals(direction)) {
-                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+                        ArrayList<Track> endedStruct = getEndedStruct((ArrayList<Track>) temp.clone(), direction1, 1 + depth);
+                        endedStruct.add(tempTrack);
+                        return endedStruct;
+                    } else if (((SwitchTrack) tempTrack).getEnd().equals(lastPoint)) {
+//                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
                         int i = 0;
-                        Point direction1 = null;
+                        Point direction1 = tempTrack.getStart();
                         for(Track trackInTemp : temp) {
                             if(trackInTemp.getId() == tempTrack.getId()) {
-                                direction1 = trackInTemp.getStart();
                                 break;
                             }
                             i++;
                         }
-//                        System.out.println("b");
+//                        System.out.println("switch setted, start " + tempTrack.getId());
+                        temp.remove(i);
 //                        for(Track track : temp) {
 //                            System.out.print(track.getId() + " ");
 //                        }
 //                        System.out.println();
-                        temp.remove(i);
-                        return getEndedStruct(temp, direction1, ++depth);
-                    } else if(((SwitchTrack) tempTrack).getEnd2().equals(direction))
+                        ArrayList<Track> endedStruct = getEndedStruct((ArrayList<Track>) temp.clone(), direction1, 1 + depth);
+                        endedStruct.add(tempTrack);
+                        return endedStruct;
+                    } else if(((SwitchTrack) tempTrack).getEnd2().equals(lastPoint))
                         return new ArrayList<>();
                 } else {
-                    if (((SwitchTrack) tempTrack).getStart().equals(direction)) {
-                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+                    if ((tempTrack.getStart().equals(lastPoint))) {
+//                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+
                         int i = 0;
-                        Point direction1 = null;
-                        Point direction2 = null;
+                        Point direction1 = tempTrack.getEnd();
+                        Point direction2 = ((SwitchTrack)tempTrack).getEnd2();
                         for(Track trackInTemp : temp) {
                             if(trackInTemp.getId() == tempTrack.getId()) {
-                                direction1 = trackInTemp.getEnd();
-                                direction2 = ((SwitchTrack)trackInTemp).getEnd2();
                                 break;
                             }
                             i++;
                         }
-//                        System.out.println("c");
-//                        for(Track track : temp) {
-//                            System.out.print(track.getId() + " ");
-//                        }
-//                        System.out.println();
+//                        System.out.println("switch, end1,2 " + tempTrack.getId());
                         temp.remove(i);
-                        return combineEndedStructs(getEndedStruct(temp, direction1, ++depth),
-                                getEndedStruct(temp, direction2, ++depth));
-                    } else if (((SwitchTrack) tempTrack).getEnd().equals(direction)) {
-                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+
+                        ArrayList<Track> endedStruct = combineEndedStructs(getEndedStruct(temp, direction1, 1 + depth),
+                                getEndedStruct((ArrayList<Track>) temp.clone(), direction2, 1 + depth));
+                        endedStruct.add(tempTrack);
+                        return endedStruct;
+                    } else if (tempTrack.getEnd().equals(lastPoint)) {
+//                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
                         int i = 0;
-                        Point direction1 = null;
-                        Point direction2 = null;
+                        Point direction1 = tempTrack.getStart();
+                        Point direction2 = ((SwitchTrack)tempTrack).getEnd2();
 
                         for(Track trackInTemp : temp) {
                             if(trackInTemp.getId() == tempTrack.getId()) {
-                                direction1 = trackInTemp.getStart();
-                                direction2 = ((SwitchTrack)trackInTemp).getEnd2();
                                 break;
                             }
                             i++;
                         }
                         temp.remove(i);
-//                        System.out.println("d");
+//                        System.out.println("switch, start, end2 " + tempTrack.getId());
 //                        for(Track track : temp) {
 //                            System.out.print(track.getId() + " ");
 //                        }
 //                        System.out.println();
-                        return combineEndedStructs(getEndedStruct(temp, direction1, ++depth),
-                                getEndedStruct(temp, direction2, ++depth));
-                    } else if (((SwitchTrack) tempTrack).getEnd2().equals(direction)) {
-                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+                        ArrayList<Track> endedStruct = combineEndedStructs(getEndedStruct((ArrayList<Track>) temp.clone(), direction1, ++depth),
+                                getEndedStruct((ArrayList<Track>) temp.clone(), direction2, ++depth));
+                        endedStruct.add(tempTrack);
+                        return endedStruct;
+                    } else if (((SwitchTrack) tempTrack).getEnd2().equals(lastPoint)) {
+//                        ArrayList<Track> temp = (ArrayList<Track>) field.clone();
                         int i = 0;
-                        Point direction1 = null;
-                        Point direction2 = null;
+                        Point direction1 = tempTrack.getStart();
+                        Point direction2 = tempTrack.getEnd();
                         for(Track trackInTemp : temp) {
                             if(trackInTemp.getId() == tempTrack.getId()) {
-                                direction1 = trackInTemp.getEnd();
-                                direction2 = trackInTemp.getStart();
                                 break;
                             }
                             i++;
                         }
-//                        System.out.println(temp.indexOf(entityOfTempTrack) + " " + entityOfTempTrack);
-//                        System.out.println("e");
-//                        for(Track track : temp) {
-//                            System.out.print(track.getId() + " ");
-//                        }
-//                        System.out.println();
+//                        System.out.println("switch, start end " + tempTrack.getId());
                         temp.remove(i);
-                        return combineEndedStructs(getEndedStruct(temp, direction1, ++depth),
-                                getEndedStruct(temp, direction2, ++depth));
+                        ArrayList<Track> endedStruct = combineEndedStructs(getEndedStruct((ArrayList<Track>) temp.clone(), direction1, 1 + depth),
+                                getEndedStruct(temp, direction2, 1 + depth));
+                        endedStruct.add(tempTrack);
+                        return endedStruct;
                     }
                 }
             } else {
-                if (tempTrack.getStart().equals(direction)) {
-                    ArrayList<Track> temp = (ArrayList<Track>) field.clone();
-//                    Track entityOfTempTrack = null;
+                if (tempTrack.getStart().equals(lastPoint)) {
+//                    ArrayList<Track> temp = (ArrayList<Track>) field.clone();
                     int i = 0;
-                    Point direction1 = null;
+                    Point direction1 = tempTrack.getEnd();
                     for(Track trackInTemp : temp) {
                         if(trackInTemp.getId() == tempTrack.getId()) {
-                            direction1 = trackInTemp.getEnd();
                             break;
                         }
                         i++;
                     }
-//                    System.out.println(temp.indexOf(temp.get(i)) + " " + temp.get(i));
-//                    System.out.println("f");
-//                    for(Track track : temp) {
-//                        System.out.print(track.getId() + " ");
-//                    }
-//                    System.out.println();
+//                    System.out.println("end " + tempTrack.getId());
                     temp.remove(i);
-                    return getEndedStruct(temp, direction1, ++depth);
-                } else if (tempTrack.getEnd().equals(direction)) {
-                    ArrayList<Track> temp = (ArrayList<Track>) field.clone();
+                    ArrayList<Track> endedStruct = getEndedStruct((ArrayList<Track>) temp.clone(), direction1, 1+depth);
+                    endedStruct.add(tempTrack);
+                    return endedStruct;
+                } else if (tempTrack.getEnd().equals(lastPoint)) {
+//                    ArrayList<Track> temp = (ArrayList<Track>) field.clone();
                     int i = 0;
-                    Point direction1 = null;
+                    Point direction1 = tempTrack.getStart();
                     for(Track trackInTemp : temp) {
                         if(trackInTemp.getId() == tempTrack.getId()) {
-                            direction1 = trackInTemp.getStart();
                             break;
                         }
                         i++;
                     }
-//                    System.out.println("b");
-//                    for(Track track : temp) {
-//                        System.out.print(track.getId() + " ");
-//                    }
-//                    System.out.println();
+//                    System.out.println("start "+ tempTrack.getId());
                     temp.remove(i);
-                    return getEndedStruct(temp, direction1, ++depth);
+                    ArrayList<Track> endedStruct = getEndedStruct((ArrayList<Track>) temp.clone(), direction1, 1+depth);
+                    endedStruct.add(tempTrack);
+                    return endedStruct;
                 }
             }
         }
+//        System.out.println("nothing was found");
         //case when no connections where found
         return new ArrayList<>();
 
     }
+    private void removeConnections(Track track) {
 
-    private void removeConnections(Point trackStart, Point trackEnd) {
-        Iterator<Track> iter = tracks.iterator();
-        for(int i = 0; i < tracks.size(); i++) {
-            Track track = iter.next();
-            if(track.getEnd().equals(trackStart))
-                tracks.get(i).setEndConnected(false);
-            if(track.getStart().equals(trackEnd))
-                tracks.get(i).setStartConnected(false);
-        }
+            if(SwitchTrack.class.isInstance(track)) {
+                Point point1 = track.getStart();
+                Point point2 = track.getEnd();
+                Point point3 = ((SwitchTrack) track).getEnd2();
+                for(Track track1 : tracks) {
+                    if ((SwitchTrack.class.isInstance(track1)) && (((SwitchTrack) track1).getEnd2().equals(point1) ||
+                            ((SwitchTrack) track1).getEnd2().equals(point2) || ((SwitchTrack) track1).getEnd2().equals(point3))) {
+                        ((SwitchTrack)track1).setSecondendConnected(false);
+                    }
+                    if (track1.getEnd().equals(point1) || track1.getEnd().equals(point2) || track1.getEnd().equals(point3)) {
+                        track1.setEndConnected(false);
+                    }
+                    if (track1.getStart().equals(point1) || track1.getStart().equals(point2) || track1.getStart().equals(point3)) {
+                        track1.setStartConnected(false);
+                    }
+                }
+            } else {
+                Point point1 = track.getStart();
+                Point point2 = track.getEnd();
+                for(Track track1 : tracks) {
+                    if ((SwitchTrack.class.isInstance(track1)) && (((SwitchTrack) track1).getEnd2().equals(point1) ||
+                            ((SwitchTrack) track1).getEnd2().equals(point2))) {
+                        ((SwitchTrack)track1).setSecondendConnected(false);
+                    }
+                    if (track1.getEnd().equals(point1) || track1.getEnd().equals(point2)) {
+                        track1.setEndConnected(false);
+                    }
+                    if (track1.getStart().equals(point1) || track1.getStart().equals(point2)) {
+                        track1.setStartConnected(false);
+                    }
+                }
+            }
+
     }
 }
