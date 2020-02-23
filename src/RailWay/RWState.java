@@ -80,11 +80,9 @@ public class RWState {
                     stepLength -= track.getLength();
                 }
             }
-            for (Track track : tracksOfTrain) {
-                System.out.print(track.getId() + " ");
-            }
             //counting headpoint
             Track newHeadTrack;
+            //зависит от трека
             boolean startDirection;
             Point newHeadPoint;
             if(tracksOfTrain.size() == 1) {
@@ -97,6 +95,7 @@ public class RWState {
                 System.out.println(newHeadTrack);
                 System.out.println(beforeHeadTrack);
             }
+            System.out.println("START DIRECTION: " + startDirection );
             boolean positivDirection = isDirectionPositiv(newHeadTrack, startDirection);
             newHeadPoint = countHeadPoint(startDirection, positivDirection, stepLength, newHeadTrack);
             System.out.println("NEW HEAD POINT: " + newHeadPoint);
@@ -123,30 +122,43 @@ public class RWState {
     }
     private Point countHeadPoint(boolean startDirection, boolean positivDirection, int stepLength, Track newHeadTrack) {
         Point newHeadPoint;
+        if (stepLength == 0) {
+            if (startDirection)
+                return newHeadTrack.getStart();
+            else
+                return newHeadTrack.getEnd();
+        }
+
+        int absLength = Math.abs(stepLength);
+        int absDist = Math.abs(newHeadTrack.getStart().getY() - newHeadTrack.getEnd().getY());
+        System.out.println("HEAD TRACK: " + newHeadTrack);
         if (newHeadTrack.getStart().getX() == newHeadTrack.getEnd().getX()) {
             System.out.println("SAME - X" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
             if (startDirection) {
                 newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX(),
-                        newHeadTrack.getEnd().getY() + Math.abs(stepLength)) : new Point(newHeadTrack.getStart().getX(),
-                        Math.abs(newHeadTrack.getStart().getY() - newHeadTrack.getEnd().getY()) + newHeadTrack.getEnd().getY() - Math.abs(stepLength));
+                        newHeadTrack.getEnd().getY() + absDist - absLength) : new Point(newHeadTrack.getStart().getX(),
+                         newHeadTrack.getStart().getY() + absLength);
             } else {
                 newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX(),
-                        Math.abs(newHeadTrack.getStart().getY() - newHeadTrack.getEnd().getY()) + newHeadTrack.getStart().getY() - Math.abs(stepLength)) :
-                        new Point(newHeadTrack.getStart().getX(), newHeadTrack.getEnd().getY() + Math.abs(stepLength));
+                        absDist + newHeadTrack.getStart().getY() - absLength) :
+                        new Point(newHeadTrack.getStart().getX(), newHeadTrack.getEnd().getY() + absLength);
             }
+
         } else {
             System.out.println("SAME - Y" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
             if (startDirection) {
-                newHeadPoint = positivDirection ? new Point(newHeadTrack.getEnd().getX() + Math.abs(stepLength), newHeadTrack.getStart().getY()) :
-                        new Point(Math.abs(newHeadTrack.getStart().getX() - newHeadTrack.getEnd().getX()) + newHeadTrack.getEnd().getX() - Math.abs(stepLength) , newHeadTrack.getStart().getY());
+                newHeadPoint = positivDirection ? new Point(absDist + newHeadTrack.getEnd().getX() - absLength, newHeadTrack.getStart().getY()) :
+                        new Point(newHeadTrack.getStart().getX() + absLength , newHeadTrack.getStart().getY());
             } else {
-                newHeadPoint = positivDirection ? new Point(Math.abs(newHeadTrack.getStart().getX() - newHeadTrack.getEnd().getX()) + newHeadTrack.getStart().getX() - Math.abs(stepLength), newHeadTrack.getStart().getY()) :
-                        new Point(newHeadTrack.getEnd().getX() + Math.abs(stepLength), newHeadTrack.getStart().getY());
+                newHeadPoint = positivDirection ? new Point(absDist + newHeadTrack.getStart().getX() - absLength, newHeadTrack.getStart().getY()) :
+                        new Point(newHeadTrack.getEnd().getX() + absLength, newHeadTrack.getStart().getY());
             }
         }
+        System.out.println("POINT " + newHeadPoint);
         return newHeadPoint;
     }
     private boolean isDirectionPositiv(Track track, boolean startDirection) {
+        System.out.println("DIRECTION COUNT: " + (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()));
         if (startDirection) {
             return (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()) > 0;
         } else {
