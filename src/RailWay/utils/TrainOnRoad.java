@@ -6,12 +6,34 @@ public class TrainOnRoad {
     //direction of moving forward
     boolean isStartDirection;
     Point positionHead;
+    boolean crashed = false;
+    boolean movingBack = false;
 
     public TrainOnRoad(Train train, Track track, boolean isStartDirection, Point currentPosition) {
         this.train = train;
         this.trackHead = track;
         this.isStartDirection = isStartDirection;
         this.positionHead = currentPosition;
+
+    }
+
+    public boolean isMovingBack() {
+        return movingBack;
+    }
+
+    public void setMovingBack(boolean movingBack) {
+        this.movingBack = movingBack;
+    }
+
+    public void setStartDirection(boolean isStartDirection) {
+        this.isStartDirection = isStartDirection;
+    }
+    public boolean isCrashed() {
+        return crashed;
+    }
+
+    public void setCrashed(boolean crashed) {
+        this.crashed = crashed;
     }
 
     public Train getTrain() {

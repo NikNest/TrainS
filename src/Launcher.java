@@ -40,10 +40,10 @@ public class Launcher {
             Point point17 = new Point(9, 12);
 
             state.addTrack(point1, point2); //1
-            state.addTrack(point2, point3); //2
+            state.addTrack(point3, point2); //2
 
             state.addSwitch(point3, point4, point10); //3
-            state.addTrack(point4, point5); //4
+            state.addTrack(point5, point4); //4
             state.addTrack(point5, point6); //5
             state.addSwitch(point7, point6, point8); //6
             state.addTrack(point8, point9); //7
@@ -69,7 +69,7 @@ public class Launcher {
 //
 
             depot.createTrainSet("TSAclass", "101name", 1, true, true);
-            depot.createTrainSet("TSAclass", "102name", 2, true, true);
+            depot.createTrainSet("TSAclass", "102name", 1, true, true);
             depot.addTrain(1, "TSAclass-101name");
             depot.addTrain(1, "TSAclass-102name");
             depot.createTrainSet("TSAclass", "103name", 2, true, true);
@@ -77,9 +77,11 @@ public class Launcher {
             depot.addTrain(2, "TSAclass-103name");
             depot.addTrain(2, "TSAclass-104name");
 //            System.out.println(depot.listTrains());
-            state.putTrain(depot.getTrain(1), point3, new Point(4, 3));
-            //no mistake?
-            state.putTrain(depot.getTrain(2), point5, new Point(10, 3));
+//            state.putTrain(depot.getTrain(1), new Point(12, 9), new Point(-1, 0));
+//            state.step((short)(-1));
+            state.putTrain(depot.getTrain(1), new Point(5, 3), new Point(1, 0));
+            //14, 15
+            state.step((short)2);
 
     }
 }

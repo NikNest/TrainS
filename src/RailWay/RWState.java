@@ -2,6 +2,7 @@ package RailWay;
 
 import RailWay.utils.*;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.*;
 //32 16 bit check
 //убрать паблики потом
@@ -14,90 +15,255 @@ public class RWState {
     ArrayList<Track> tracks;
     ArrayList<TrainOnRoad> trains;
     public void step(short speed) {
-        HashMap<TrainOnRoad, Boolean> movingTrains = new HashMap<>();
+        ArrayList<TrainOnRoad> movingTrains = new ArrayList<>();
         if (trains.size() == 0) {
             System.out.println("OK");
             return;
         }
         for(TrainOnRoad train : trains) {
-            boolean outOfTracks = crashWithTracksHappens(move(train));
-            movingTrains.put(train, outOfTracks);
+            train = move(train, speed);
+            movingTrains.add(train);
         }
         ArrayList<ArrayList<Integer>> crashes = findCrashes(movingTrains);
-        String str = createStepString(crashes);
+        String str = createStepString(movingTrains, crashes);
         System.out.println(str);
         removeCrashedTrains(crashes);
     }
-    private boolean crashWithTracksHappens(TrainOnRoad train) {
 
+    private TrainOnRoad move(TrainOnRoad train, int step) {
+        if(step != 0) {
+            //in case of negative step turning around
+            if(step < 0) {
+                train.setStartDirection(!train.isStartDirection());
+                train.setMovingBack(true);
+                step = -step;
+            }
+            ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
+            int i = 0;
+            for (Track track : field) {
+                boolean notTrackHead = track.getId() != train.getTrackHead().getId();
+                boolean areStartConnected = track.getStart().equals(train.getTrackHead().getStart()) || track.getEnd().equals(train.getTrackHead().getStart());
+                boolean areEndConnected = track.getStart().equals(train.getTrackHead().getEnd()) || track.getEnd().equals(train.getTrackHead().getEnd());
+                boolean areConnectedEndDirection = train.isStartDirection() ? areEndConnected : areStartConnected;
+                if(areConnectedEndDirection && notTrackHead)
+                    break;
+                i++;
+            }
+            //удаляем лишний поезд не по ходу движения
+            field.remove(i);
+            ArrayList<Track> forwardRoad;
+            int stepLength = step;
+            //counting road as ended struct, counting offset
+            if (train.isStartDirection()) {
+                forwardRoad = getEndedStruct(field, train.getTrackHead().getEnd(), 0);
+                forwardRoad = removeCopies(forwardRoad);
+                stepLength += Math.abs(train.getTrackHead().getEnd().getX() + train.getTrackHead().getEnd().getY()
+                        - train.getPositionHead().getX() - train.getPositionHead().getY());
+            } else {
+                forwardRoad = getEndedStruct(field, train.getTrackHead().getStart(), 0);
+                forwardRoad = removeCopies(forwardRoad);
+                stepLength += Math.abs(train.getTrackHead().getStart().getX() + train.getTrackHead().getStart().getY()
+                        - train.getPositionHead().getX() - train.getPositionHead().getY());
+            }
+            //check for crash with track
+            if(stepLength > countLengthEndedStruct(forwardRoad)) {
+                System.out.println("CRASH WITH TRACK");
+                train.setCrashed(true);
+                return train;
+            }
+            Collections.reverse(forwardRoad);
+            //moving
+            ArrayList<Track> tracksOfTrain = new ArrayList<>();
+            for (Track track : forwardRoad) {
+                if (stepLength > 0) {
+                    tracksOfTrain.add(track);
+                    stepLength -= track.getLength();
+                }
+            }
+            for (Track track : tracksOfTrain) {
+                System.out.print(track.getId() + " ");
+            }
+            //counting headpoint
+            Track newHeadTrack;
+            boolean startDirection;
+            Point newHeadPoint;
+            if(tracksOfTrain.size() == 1) {
+                newHeadTrack = train.getTrackHead();
+                startDirection = train.isStartDirection();
+            } else {
+                newHeadTrack = tracksOfTrain.get(tracksOfTrain.size() - 1);
+                Track beforeHeadTrack = tracksOfTrain.get(tracksOfTrain.size() - 2);
+                startDirection = newHeadTrack.getCommonPoint(beforeHeadTrack).equals(newHeadTrack.getEnd());
+                System.out.println(newHeadTrack);
+                System.out.println(beforeHeadTrack);
+            }
+            boolean positivDirection = isDirectionPositiv(newHeadTrack, startDirection);
+            newHeadPoint = countHeadPoint(startDirection, positivDirection, stepLength, newHeadTrack);
+            System.out.println("NEW HEAD POINT: " + newHeadPoint);
+            if(train.isMovingBack()) {
+                TrainOnRoad temp = new TrainOnRoad(train.getTrain(), newHeadTrack, !startDirection, newHeadPoint);
+                if (crashesWithTrack(temp))
+                    temp.setCrashed(true);
+                return temp;
+            } else
+                return new TrainOnRoad(train.getTrain(), newHeadTrack, startDirection, newHeadPoint);
+        } else
+            return train;
     }
-    private TrainOnRoad move(TrainOnRoad train) {
+    private int countLengthEndedStruct(ArrayList<Track> endedStruct) {
+        if(endedStruct.size()==0)
+            return 0;
+        else {
+            int length = 0;
+            for(Track track : endedStruct) {
+                length += track.getLength();
+            }
+            return length;
+        }
+    }
+    private Point countHeadPoint(boolean startDirection, boolean positivDirection, int stepLength, Track newHeadTrack) {
+        Point newHeadPoint;
+        if (newHeadTrack.getStart().getX() == newHeadTrack.getEnd().getX()) {
+            System.out.println("SAME - X" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
+            if (startDirection) {
+                newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX(),
+                        newHeadTrack.getEnd().getY() + Math.abs(stepLength)) : new Point(newHeadTrack.getStart().getX(),
+                        Math.abs(newHeadTrack.getStart().getY() - newHeadTrack.getEnd().getY()) + newHeadTrack.getEnd().getY() - Math.abs(stepLength));
+            } else {
+                newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX(),
+                        Math.abs(newHeadTrack.getStart().getY() - newHeadTrack.getEnd().getY()) + newHeadTrack.getStart().getY() - Math.abs(stepLength)) :
+                        new Point(newHeadTrack.getStart().getX(), newHeadTrack.getEnd().getY() + Math.abs(stepLength));
+            }
+        } else {
+            System.out.println("SAME - Y" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
+            if (startDirection) {
+                newHeadPoint = positivDirection ? new Point(newHeadTrack.getEnd().getX() + Math.abs(stepLength), newHeadTrack.getStart().getY()) :
+                        new Point(Math.abs(newHeadTrack.getStart().getX() - newHeadTrack.getEnd().getX()) + newHeadTrack.getEnd().getX() - Math.abs(stepLength) , newHeadTrack.getStart().getY());
+            } else {
+                newHeadPoint = positivDirection ? new Point(Math.abs(newHeadTrack.getStart().getX() - newHeadTrack.getEnd().getX()) + newHeadTrack.getStart().getX() - Math.abs(stepLength), newHeadTrack.getStart().getY()) :
+                        new Point(newHeadTrack.getEnd().getX() + Math.abs(stepLength), newHeadTrack.getStart().getY());
+            }
+        }
+        return newHeadPoint;
+    }
+    private boolean isDirectionPositiv(Track track, boolean startDirection) {
+        if (startDirection) {
+            return (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()) > 0;
+        } else {
+            return (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()) < 0;
+        }
+    }
+    private boolean crashesWithTrack(TrainOnRoad train) {
         ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
         int i = 0;
-        for(Track track : field) {
-            if(track.getId() == train.getTrackHead().getId())
-                break;
+        for (Track track : field) {
+            if(track.getId() != train.getTrackHead().getId())
+                if(train.isStartDirection())
+                    if(track.getStart().equals(train.getTrackHead().getEnd()) || track.getEnd().equals(train.getTrackHead().getEnd())) {
+                        break;
+                    } else if (track.getStart().equals(train.getTrackHead().getStart()) || track.getEnd().equals(train.getTrackHead().getStart())) {
+                        break;
+                    } else {
+                        continue;
+                    }
             i++;
         }
         field.remove(i);
-        ArrayList<Track> forwardRoad;
-        int trainLength;
-        //важно что тк здесь береться ендед стракт со стартпоинта а не с поинта хэда то длина должна быть меньше (старт - хэдпоинт)
+        ArrayList<Track> endedStruct = new ArrayList<>();
+        int trainLength = train.getLength();
         if(train.isStartDirection()) {
-            forwardRoad = getEndedStruct(field, train.getTrackHead().getStart(), 0);
-            trainLength = train.getLength() - Math.abs(train.getTrackHead().getStart().getX() + train.getTrackHead().getStart().getY()
-                    - train.getPositionHead().getX() - train.getPositionHead().getY());
+            endedStruct = getEndedStruct(field, train.getTrackHead().getEnd(), 0);
+            trainLength += Math.abs(train.getPositionHead().getX() + train.getPositionHead().getY()
+                    - train.getTrackHead().getEnd().getX() - train.getTrackHead().getEnd().getY());
         } else {
-            forwardRoad = getEndedStruct(field, train.getTrackHead().getEnd(), 0);
-            trainLength = train.getLength() - Math.abs(train.getTrackHead().getEnd().getX() + train.getTrackHead().getEnd().getY()
-                    - train.getPositionHead().getX() - train.getPositionHead().getY());
+            endedStruct = getEndedStruct(field, train.getTrackHead().getStart(), 0);
+            trainLength += Math.abs(train.getPositionHead().getX() + train.getPositionHead().getY()
+                    - train.getTrackHead().getStart().getX() - train.getTrackHead().getStart().getY());
         }
-        i = 0;
-        for (Track track : forwardRoad) {
-            if (trainLength > 0) {
-                i++;
-                trainLength -= track.getLength();
-            }
+        Collections.reverse(endedStruct);
+        for (Track track : endedStruct) {
+            trainLength -= track.getLength();
         }
-        Track newHeadTrack = forwardRoad.get(i);
-        //could be mistake if i == 0
-        Track trackBeforeHead = forwardRoad.get(i-1);
-        boolean startDirection;
-        if(newHeadTrack.getCommonPoint(trackBeforeHead).equals(newHeadTrack.getStart()))
-            startDirection = true;
+        if(trainLength>=0)
+            return true;
         else
-            startDirection = false;
-        Point newHeadPoint;
-        if(newHeadTrack.getSameCoord() == newHeadTrack.getStart().getX())
-        {
-            if(startDirection)
-                newHeadPoint = new Point(newHeadTrack.getStart().getX(),
-                    newHeadTrack.getEnd().getY() + newHeadTrack.getLength() + trainLength);
-            else
-                newHeadPoint = new Point(newHeadTrack.getStart().getX(),
-                        newHeadTrack.getStart().getY() + newHeadTrack.getLength() + trainLength);
-        } else {
-            if(startDirection)
-                newHeadPoint = new Point(newHeadTrack.getEnd().getX() + newHeadTrack.getLength() + trainLength,
-                        newHeadTrack.getStart().getY());
-            else
-                newHeadPoint = new Point(newHeadTrack.getStart().getX() + newHeadTrack.getLength() + trainLength,
-                        newHeadTrack.getStart().getY());
-        }
-        return new TrainOnRoad(train.getTrain(), newHeadTrack, startDirection, newHeadPoint);
+            return false;
     }
     //returns id of trains
     //needed to be sorted
     //crashes with tracks too
-    private ArrayList<ArrayList<Integer>> findCrashes(HashMap<TrainOnRoad, Boolean> movingTrains) {
+    private ArrayList<ArrayList<Integer>> findCrashes(ArrayList<TrainOnRoad> movingTrains) {
+        ArrayList<ArrayList<Integer>> crashesId = new ArrayList<>();
+        for(TrainOnRoad train1 : movingTrains) {
+            ArrayList<Integer> crashIds = new ArrayList<Integer>();
+            for (TrainOnRoad train2 : movingTrains) {
+                if (haveCommonTracks(train1, train2)) {
+                    train1.setCrashed(true);
+                    train2.setCrashed(true);
+                    crashIds.add(train1.getTrain().getTrainId());
+                    crashIds.add(train2.getTrain().getTrainId());
+                }
+            }
+            if (train1.isCrashed()) {
+                crashIds.add(train1.getTrain().getTrainId());
+            }
 
-        return new ArrayList<>();
+            Collections.sort(crashIds);
+            HashSet<Integer> temp = new HashSet<>(crashIds);
+            crashIds.addAll(temp);
+            crashesId.add(crashIds);
+        }
+        Collections.sort(crashesId, new SortCrashesIds());
+        return crashesId;
     }
-    private String createStepString(ArrayList<ArrayList<Integer>> idsCrashes) {
-
+    private String createStepString(ArrayList<TrainOnRoad> movingTrains, ArrayList<ArrayList<Integer>> idsCrashes) {
+        String str = "";
+        if(idsCrashes.size() == 0) {
+                for (TrainOnRoad train : movingTrains) {
+                    str += train + "\n";
+                }
+        }
+        Iterator<TrainOnRoad> trainOnRoadIterator = movingTrains.iterator();
+        for (TrainOnRoad train : movingTrains) {
+            if (train.isCrashed()) {
+                ArrayList<Integer> crashIds = new ArrayList<>();
+                for (ArrayList<Integer> crashIdsTemp : idsCrashes) {
+                    if (crashIdsTemp.get(0) == train.getTrain().getTrainId()) {
+                        crashIds = crashIdsTemp;
+                        break;
+                    }
+                }
+                //mean that is already listed
+                if (crashIds.size() == 0)
+                    continue;
+                else {
+                    str += "Crash of train " + crashIds.get(0);
+                    if (crashIds.size() > 1)
+                    {
+                        for(int q = 1; q < crashIds.size(); q++) {
+                            str += "," + crashIds.get(q);
+                        }
+                    }
+                    str += "\n";
+                }
+            } else
+                str += train + "\n";
+        }
+        str.trim();
+        return str;
     }
     private void removeCrashedTrains(ArrayList<ArrayList<Integer>> crashes) {
-
+        ArrayList<Integer> trainsToDel = new ArrayList<>();
+        int i = 0;
+        for(TrainOnRoad train : trains) {
+            if(train.isCrashed())
+                trainsToDel.add(i);
+            i++;
+        }
+        Collections.reverse(trainsToDel);
+        for(int num : trainsToDel) {
+            trains.remove(num);
+        }
     }
     public void addTrack(Point start, Point end) {
         if (!start.equals(end) && ((start.getY() == end.getY()) || (start.getX() == end.getX()))) {
@@ -215,8 +381,12 @@ public class RWState {
         }
         System.out.println("track with this id not found");
     }
-    //TODO
+    private Point getPointFromDirection(Point pointFrom, Point direction) {
+
+        return new Point(pointFrom.getX() + direction.getX(), pointFrom.getY() + direction.getY());
+    }
     public void putTrain(Train train, Point pointFrom, Point direction) {
+        direction = getPointFromDirection(pointFrom, direction);
         for(Track track : tracks) {
             if(track instanceof SwitchTrack) {
                 if(!((SwitchTrack) track).isSwitchSetted()) {
@@ -230,6 +400,7 @@ public class RWState {
             if (train.isTrainValid()) {
                 //проверить как находит на углах
                     Track track = findTrack(pointFrom, direction);
+//                System.out.println("TRACK: " + track + " dir: " + direction);
 //                    System.out.println("TRACK DETERMINED: " + track.getId());
                     if(track == null) {
                         System.out.println("track not found");
@@ -319,8 +490,50 @@ public class RWState {
             if(pointBelongsTrack(pointFrom, track)) {
                 boolean dirTrack = track.getEnd().getY() == track.getStart().getY();
                 boolean dirSetted = pointFrom.getY() == direction.getY();
-                if(dirTrack == dirSetted)
-                    return track;
+                if(dirTrack == dirSetted) {
+                    if(pointFrom.equals(track.getEnd())) {
+                        //positiv direction
+                        boolean trackDirection = track.getEnd().getX() + track.getEnd().getY() - track.getStart().getY() - track.getStart().getX() > 0;
+                        boolean directionOutside = trackDirection ? direction.getX() + direction.getY() - track.getEnd().getX() - track.getEnd().getY() > 0
+                                : direction.getX() + direction.getY() - track.getEnd().getX() - track.getEnd().getY() < 0;
+                        if(!directionOutside) {
+                            for (Track track1 : tracks) {
+                                if ((track1.getId() != track.getId()) &&
+                                        (track1.getStart().equals(pointFrom) || track1.getEnd().equals(pointFrom))) {
+                                    dirTrack = track1.getEnd().getY() == track1.getStart().getY();
+                                    dirSetted = pointFrom.getY() == direction.getY();
+                                    if (dirTrack == dirSetted)
+                                        return track1;
+                                    else
+                                        return null;
+                                }
+                            }
+                        } else
+                            return track;
+                    } else if (pointFrom.equals(track.getStart())) {
+//                        System.out.println("side: " + (direction.getX() + direction.getY() - track.getEnd().getX() - track.getEnd().getY())
+//                         + "length: " + (-(track.getEnd().getX() + track.getEnd().getY() - track.getStart().getX() - track.getStart().getY())));
+                        boolean trackDirection = track.getEnd().getX() + track.getEnd().getY() - track.getStart().getY() - track.getStart().getX() > 0;
+                        boolean directionOutside = !trackDirection ? direction.getX() + direction.getY() - track.getStart().getX() - track.getStart().getY() > 0
+                                : direction.getX() + direction.getY() - track.getStart().getX() - track.getStart().getY() < 0;
+                        if(!directionOutside) {
+                            for (Track track1 : tracks) {
+                                if ((track1.getId() != track.getId()) &&
+                                        (track1.getStart().equals(pointFrom) || track1.getEnd().equals(pointFrom))) {
+                                    dirTrack = track1.getEnd().getY() == track1.getStart().getY();
+                                    dirSetted = pointFrom.getY() == direction.getY();
+                                    if (dirTrack == dirSetted)
+                                        return track1;
+                                    else
+                                        return null;
+                                }
+                            }
+                        } else
+                            return track;
+                    } else {
+                        return track;
+                    }
+                }
 //                System.out.println("Point : " + pointFrom + " belongs to the track: " + track.getId());
 //                System.out.println(dirTrack + " " + dirSetted);
             }
