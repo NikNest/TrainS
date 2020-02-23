@@ -67,7 +67,7 @@ public class RWState {
             }
             //check for crash with track
             if(stepLength > countLengthEndedStruct(forwardRoad)) {
-                System.out.println("CRASH WITH TRACK");
+                System.out.println("CRASH WITH TRACK(F)");
                 train.setCrashed(true);
                 return train;
             }
@@ -95,14 +95,17 @@ public class RWState {
                 System.out.println(newHeadTrack);
                 System.out.println(beforeHeadTrack);
             }
-            System.out.println("START DIRECTION: " + startDirection );
+//            System.out.println("START DIRECTION: " + startDirection );
             boolean positivDirection = isDirectionPositiv(newHeadTrack, startDirection);
             newHeadPoint = countHeadPoint(startDirection, positivDirection, stepLength, newHeadTrack);
             System.out.println("NEW HEAD POINT: " + newHeadPoint);
             if(train.isMovingBack()) {
+                train.setMovingBack(false);
                 TrainOnRoad temp = new TrainOnRoad(train.getTrain(), newHeadTrack, !startDirection, newHeadPoint);
-                if (crashesWithTrack(temp))
+                if (crashesWithTrack(temp)) {
+                    System.out.println("CRASH WITH TRACK");
                     temp.setCrashed(true);
+                }
                 return temp;
             } else
                 return new TrainOnRoad(train.getTrain(), newHeadTrack, startDirection, newHeadPoint);
@@ -128,75 +131,77 @@ public class RWState {
             else
                 return newHeadTrack.getEnd();
         }
-
         int absLength = Math.abs(stepLength);
-        int absDist = Math.abs(newHeadTrack.getStart().getY() - newHeadTrack.getEnd().getY());
-        System.out.println("HEAD TRACK: " + newHeadTrack);
+//        System.out.println("HEAD TRACK: " + newHeadTrack);
         if (newHeadTrack.getStart().getX() == newHeadTrack.getEnd().getX()) {
-            System.out.println("SAME - X" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
+//            System.out.println("SAME - X" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
             if (startDirection) {
                 newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX(),
-                        newHeadTrack.getEnd().getY() + absDist - absLength) : new Point(newHeadTrack.getStart().getX(),
+                        newHeadTrack.getStart().getY()  - absLength) : new Point(newHeadTrack.getStart().getX(),
                          newHeadTrack.getStart().getY() + absLength);
             } else {
                 newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX(),
-                        absDist + newHeadTrack.getStart().getY() - absLength) :
+                        newHeadTrack.getEnd().getY() - absLength) :
                         new Point(newHeadTrack.getStart().getX(), newHeadTrack.getEnd().getY() + absLength);
             }
 
         } else {
-            System.out.println("SAME - Y" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
+//            System.out.println("SAME - Y" + " LENGTH:" + stepLength + " DIRECTION: " + positivDirection + " START: " + startDirection);
             if (startDirection) {
-                newHeadPoint = positivDirection ? new Point(absDist + newHeadTrack.getEnd().getX() - absLength, newHeadTrack.getStart().getY()) :
+                newHeadPoint = positivDirection ? new Point(newHeadTrack.getStart().getX() - absLength, newHeadTrack.getStart().getY()) :
                         new Point(newHeadTrack.getStart().getX() + absLength , newHeadTrack.getStart().getY());
             } else {
-                newHeadPoint = positivDirection ? new Point(absDist + newHeadTrack.getStart().getX() - absLength, newHeadTrack.getStart().getY()) :
+                newHeadPoint = positivDirection ? new Point(newHeadTrack.getEnd().getX() - absLength, newHeadTrack.getStart().getY()) :
                         new Point(newHeadTrack.getEnd().getX() + absLength, newHeadTrack.getStart().getY());
             }
         }
-        System.out.println("POINT " + newHeadPoint);
+//        System.out.println("POINT " + newHeadPoint);
         return newHeadPoint;
     }
     private boolean isDirectionPositiv(Track track, boolean startDirection) {
-        System.out.println("DIRECTION COUNT: " + (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()));
+//        System.out.println("DIRECTION COUNT: " + (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()));
         if (startDirection) {
             return (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()) > 0;
         } else {
             return (track.getStart().getX() + track.getStart().getY() - track.getEnd().getX() - track.getEnd().getY()) < 0;
         }
     }
+    //get train with a changed direction
     private boolean crashesWithTrack(TrainOnRoad train) {
         ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
         int i = 0;
         for (Track track : field) {
             if(track.getId() != train.getTrackHead().getId())
-                if(train.isStartDirection())
-                    if(track.getStart().equals(train.getTrackHead().getEnd()) || track.getEnd().equals(train.getTrackHead().getEnd())) {
+                if(train.isStartDirection()) {
+                    boolean trackConnectedWithHeadTrackStart = track.getStart().equals(train.getTrackHead().getStart()) || track.getEnd().equals(train.getTrackHead().getStart());
+                    if (trackConnectedWithHeadTrackStart) {
                         break;
-                    } else if (track.getStart().equals(train.getTrackHead().getStart()) || track.getEnd().equals(train.getTrackHead().getStart())) {
-                        break;
-                    } else {
-                        continue;
                     }
+                } else {
+                    boolean trackConnectedWithHeadTrackEnd = track.getStart().equals(train.getTrackHead().getEnd()) || track.getEnd().equals(train.getTrackHead().getEnd());
+                    if (trackConnectedWithHeadTrackEnd) {
+                        break;
+                    }
+                }
             i++;
         }
         field.remove(i);
         ArrayList<Track> endedStruct = new ArrayList<>();
         int trainLength = train.getLength();
         if(train.isStartDirection()) {
-            endedStruct = getEndedStruct(field, train.getTrackHead().getEnd(), 0);
-            trainLength += Math.abs(train.getPositionHead().getX() + train.getPositionHead().getY()
-                    - train.getTrackHead().getEnd().getX() - train.getTrackHead().getEnd().getY());
-        } else {
             endedStruct = getEndedStruct(field, train.getTrackHead().getStart(), 0);
             trainLength += Math.abs(train.getPositionHead().getX() + train.getPositionHead().getY()
                     - train.getTrackHead().getStart().getX() - train.getTrackHead().getStart().getY());
+        } else {
+            endedStruct = getEndedStruct(field, train.getTrackHead().getEnd(), 0);
+            trainLength += Math.abs(train.getPositionHead().getX() + train.getPositionHead().getY()
+                    - train.getTrackHead().getEnd().getX() - train.getTrackHead().getEnd().getY());
         }
         Collections.reverse(endedStruct);
         for (Track track : endedStruct) {
             trainLength -= track.getLength();
         }
-        if(trainLength>=0)
+        if(trainLength>0)
             return true;
         else
             return false;

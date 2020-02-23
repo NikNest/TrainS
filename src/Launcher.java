@@ -79,9 +79,9 @@ public class Launcher {
 //            System.out.println(depot.listTrains());
 //            state.putTrain(depot.getTrain(1), new Point(12, 9), new Point(-1, 0));
 //            state.step((short)(-1));
-            state.putTrain(depot.getTrain(1), new Point(5, 3), new Point(-1, 0));
+            state.putTrain(depot.getTrain(1), new Point(3, 2), new Point(0, -1));
             //14, 15
-            state.step((short)-7);
+            state.step((short)1);
 
     }
 }
