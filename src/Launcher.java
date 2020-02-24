@@ -94,66 +94,24 @@ public class Launcher {
             depot.createTrainSet("TSAclass", "1016name", 1, true, true);
             depot.addTrain(8, "TSAclass-1015name");
             depot.addTrain(8, "TSAclass-1016name");
-            //TODO (0, 0) шаг
 
-
-            state.putTrain(depot.getTrain(1), new Point(9, 14), new Point(0, 1));
-//            //good
-//            state.putTrain(depot.getTrain(2), new Point(9, 3), new Point(1, 0));
-//            //good
+            //TODO COLLECTIONS.SORT испоьзовать лямбда выражения
+            state.putTrain(depot.getTrain(1), new Point(4, 3), new Point(1, 0));
+//            state.putTrain(depot.getTrain(2), new Point(8, 3), new Point(1, 0));
 //            state.putTrain(depot.getTrain(5), new Point(9, 4), new Point(0, -1));
-//            //good
 //            state.putTrain(depot.getTrain(4), new Point(11, 9), new Point(1, 0));
-//            //good
-//            state.putTrain(depot.getTrain(3), new Point(9, 7), new Point(0, -1));
-            //mistake
-//            state.putTrain(depot.getTrain(6), new Point(12, 9), new Point(1, 0));
-            //mistake
+//            state.putTrain(depot.getTrain(3), new Point(9, 8), new Point(0, 1));
+//            state.putTrain(depot.getTrain(6), new Point(12, 9), new Point(-1, 0));
 //            state.putTrain(depot.getTrain(7), new Point(0, 0), new Point(-1, 0));
-//            //good
 //            state.putTrain(depot.getTrain(8), new Point(3, 2), new Point(0, 1));
-
+//
+//            state.step((short)1);
+//            state.step((short)1);
+//            state.deleteTrack(15);
+//            state.deleteTrack(14);
+//            state.deleteTrack(13);
+            state.setSwitch(3, point4);
             state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-            state.step((short)1);
-
-
 
     }
 }
