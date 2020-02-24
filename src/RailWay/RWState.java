@@ -2,7 +2,6 @@ package RailWay;
 
 import RailWay.utils.*;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.*;
 //32 16 bit check
 //убрать паблики потом
@@ -27,9 +26,8 @@ public class RWState {
         ArrayList<ArrayList<Integer>> crashes = findCrashes(movingTrains);
         String str = createStepString(movingTrains, crashes);
         System.out.println(str);
-        removeCrashedTrains(crashes);
+        trains = removeCrashedTrains(movingTrains);
     }
-
     private TrainOnRoad move(TrainOnRoad train, int step) {
         if(step != 0) {
             //in case of negative step turning around
@@ -67,7 +65,7 @@ public class RWState {
             }
             //check for crash with track
             if(stepLength > countLengthEndedStruct(forwardRoad)) {
-                System.out.println("CRASH WITH TRACK(F)");
+//                System.out.println("CRASH WITH TRACK(Forward moving)");
                 train.setCrashed(true);
                 return train;
             }
@@ -92,18 +90,18 @@ public class RWState {
                 newHeadTrack = tracksOfTrain.get(tracksOfTrain.size() - 1);
                 Track beforeHeadTrack = tracksOfTrain.get(tracksOfTrain.size() - 2);
                 startDirection = newHeadTrack.getCommonPoint(beforeHeadTrack).equals(newHeadTrack.getEnd());
-                System.out.println(newHeadTrack);
-                System.out.println(beforeHeadTrack);
+//                System.out.println(newHeadTrack);
+//                System.out.println(beforeHeadTrack);
             }
 //            System.out.println("START DIRECTION: " + startDirection );
             boolean positivDirection = isDirectionPositiv(newHeadTrack, startDirection);
             newHeadPoint = countHeadPoint(startDirection, positivDirection, stepLength, newHeadTrack);
-            System.out.println("NEW HEAD POINT: " + newHeadPoint);
+//            System.out.println("NEW HEAD POINT: " + newHeadPoint);
             if(train.isMovingBack()) {
                 train.setMovingBack(false);
                 TrainOnRoad temp = new TrainOnRoad(train.getTrain(), newHeadTrack, !startDirection, newHeadPoint);
                 if (crashesWithTrack(temp)) {
-                    System.out.println("CRASH WITH TRACK");
+//                    System.out.println("CRASH WITH TRACK(Back moving)");
                     temp.setCrashed(true);
                 }
                 return temp;
@@ -214,7 +212,7 @@ public class RWState {
         for(TrainOnRoad train1 : movingTrains) {
             ArrayList<Integer> crashIds = new ArrayList<Integer>();
             for (TrainOnRoad train2 : movingTrains) {
-                if (haveCommonTracks(train1, train2)) {
+                if ((train2.getTrain().getTrainId() != train1.getTrain().getTrainId()) && haveCommonTracks(train1, train2)) {
                     train1.setCrashed(true);
                     train2.setCrashed(true);
                     crashIds.add(train1.getTrain().getTrainId());
@@ -224,14 +222,19 @@ public class RWState {
             if (train1.isCrashed()) {
                 crashIds.add(train1.getTrain().getTrainId());
             }
-
-            Collections.sort(crashIds);
-            HashSet<Integer> temp = new HashSet<>(crashIds);
-            crashIds.addAll(temp);
-            crashesId.add(crashIds);
+            if(crashIds.size() != 0) {
+                Collections.sort(crashIds);
+                HashSet<Integer> temp = new HashSet<>(crashIds);
+                crashIds.clear();
+                crashIds.addAll(temp);
+                crashesId.add(crashIds);
+            }
         }
-        Collections.sort(crashesId, new SortCrashesIds());
-        return crashesId;
+        if(crashesId.size()!=0) {
+            Collections.sort(crashesId, new SortCrashesIds());
+            return crashesId;
+        } else
+            return new ArrayList<ArrayList<Integer>>();
     }
     private String createStepString(ArrayList<TrainOnRoad> movingTrains, ArrayList<ArrayList<Integer>> idsCrashes) {
         String str = "";
@@ -239,8 +242,8 @@ public class RWState {
                 for (TrainOnRoad train : movingTrains) {
                     str += train + "\n";
                 }
+                return str.trim();
         }
-        Iterator<TrainOnRoad> trainOnRoadIterator = movingTrains.iterator();
         for (TrainOnRoad train : movingTrains) {
             if (train.isCrashed()) {
                 ArrayList<Integer> crashIds = new ArrayList<>();
@@ -266,21 +269,21 @@ public class RWState {
             } else
                 str += train + "\n";
         }
-        str.trim();
-        return str;
+        return str.trim();
     }
-    private void removeCrashedTrains(ArrayList<ArrayList<Integer>> crashes) {
+    private ArrayList<TrainOnRoad> removeCrashedTrains(ArrayList<TrainOnRoad> movingTrains) {
         ArrayList<Integer> trainsToDel = new ArrayList<>();
         int i = 0;
-        for(TrainOnRoad train : trains) {
+        for(TrainOnRoad train : movingTrains) {
             if(train.isCrashed())
                 trainsToDel.add(i);
             i++;
         }
-        Collections.reverse(trainsToDel);
+        Collections.reverse(movingTrains);
         for(int num : trainsToDel) {
-            trains.remove(num);
+            movingTrains.remove(num);
         }
+        return movingTrains;
     }
     public void addTrack(Point start, Point end) {
         if (!start.equals(end) && ((start.getY() == end.getY()) || (start.getX() == end.getX()))) {
@@ -472,6 +475,7 @@ public class RWState {
                         return;
                     }
                     for(TrainOnRoad tempTrainOnRoad : trains) {
+//                        System.out.println("COMMON TRAINS CHECK: " + tempTrainOnRoad.getTrain().getTrainId() + " " + trainOnRoad.getTrain().getTrainId());
                         if(haveCommonTracks(tempTrainOnRoad, trainOnRoad)) {
                             System.out.println("there is a train already on these tracks");
                             return;
@@ -557,69 +561,59 @@ public class RWState {
         }
         return null;
     }
+    public ArrayList<Track> getTracksFromTrainOnRoad(TrainOnRoad train) {
+        ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
+        Point pointStartSearch = null;
+        int i = 0;
+        for (Track track : field) {
+            boolean notTrackHead = track.getId() != train.getTrackHead().getId();
+            boolean areStartConnected = track.getStart().equals(train.getTrackHead().getStart()) || track.getEnd().equals(train.getTrackHead().getStart());
+            boolean areEndConnected = track.getStart().equals(train.getTrackHead().getEnd()) || track.getEnd().equals(train.getTrackHead().getEnd());
+            boolean isForwardTrack = train.isStartDirection() ? areStartConnected : areEndConnected;
+//            System.out.println("Start direction: " + train.isStartDirection() + " start connected: " + areStartConnected + " end connected: " +
+//                    areEndConnected + " track: " + track.getId());
+            if(isForwardTrack && notTrackHead) {
+                pointStartSearch = areStartConnected ? track.getStart() : track.getEnd();
+                break;
+            }
+            i++;
+        }
+        //System.out.println("START POINT: " + pointStartSearch + " FOR TRAIN " + train.getTrain().getTrainId());
+        ArrayList<Track> tracksOfTrain = new ArrayList<>();
+        if(i!=field.size()) {
+            field.remove(i);
+            ArrayList<Track> forwardRoad;
+            forwardRoad = getEndedStruct(field, pointStartSearch, 0);
+            Collections.reverse(forwardRoad);
+            int lengthExtended = train.getLength() + Math.abs(pointStartSearch.getX() + pointStartSearch.getY() - train.getPositionHead().getX() - train.getPositionHead().getY());
+            for (Track track : forwardRoad) {
+                if (lengthExtended > 0) {
+                    tracksOfTrain.add(track);
+                    lengthExtended -= track.getLength();
+                }
+            }
+        } else
+            tracksOfTrain.add(train.getTrackHead());
+        return tracksOfTrain;
+    }
     //for put
     public boolean haveCommonTracks(TrainOnRoad trainOnRoad1, TrainOnRoad trainOnRoad2) {
-        if(crossHappens(trainOnRoad1, trainOnRoad2))
-            return true;
-        ArrayList<Track> tracksOfFirst = new ArrayList<>();
-        ArrayList<Track> tracksOfSecond = new ArrayList<>();
-        ArrayList<Track> field = (ArrayList<Track>) tracks.clone();
-        int i = 0;
-        for(Track track1 : field) {
-            if(track1.getId() == trainOnRoad1.getTrackHead().getId())
-                break;
-            i++;
-        }
-        field.remove(i);
-        ArrayList<Track> endedStructFirst = trainOnRoad1.isStartDirection() ? getEndedStruct(field, trainOnRoad1.getTrackHead().getEnd(), 0) :
-                getEndedStruct(field, trainOnRoad1.getTrackHead().getStart(), 0);
-        Collections.reverse(endedStructFirst);
-
-        int firstTrainsLength = trainOnRoad1.getLength() - trainOnRoad1.getLengthHead();
-        for(Track track1 : endedStructFirst) {
-            if(firstTrainsLength > 0) {
-                firstTrainsLength -= track1.getLength();
-                tracksOfFirst.add(track1);
-            }
-        }
-        field = (ArrayList<Track>) tracks.clone();
-        i = 0;
-        for(Track track1 : field) {
-            if(track1.getId() == trainOnRoad2.getTrackHead().getId())
-                break;
-            i++;
-        }
-        field.remove(i);
-        ArrayList<Track> endedStructSecond = trainOnRoad2.isStartDirection() ? getEndedStruct(field, trainOnRoad2.getTrackHead().getEnd(), 0) :
-                getEndedStruct(field, trainOnRoad2.getTrackHead().getStart(), 0);
-        Collections.reverse(endedStructSecond);
-
-        int secondTrainsLength = trainOnRoad2.getLength() - trainOnRoad2.getLengthHead();
-        for(Track track1 : endedStructSecond) {
-            if(firstTrainsLength > 0) {
-                secondTrainsLength -= track1.getLength();
-                tracksOfSecond.add(track1);
-            }
-        }
-        tracksOfFirst.add(trainOnRoad1.getTrackHead());
+//        if(crossHappens(trainOnRoad1, trainOnRoad2))
+//            return true;
+        ArrayList<Track> tracksOfFirst = getTracksFromTrainOnRoad(trainOnRoad1);
+        ArrayList<Track> tracksOfSecond = getTracksFromTrainOnRoad(trainOnRoad2);
 //        System.out.println("\nTracks of first train: ");
 //        for (Track track1 : tracksOfFirst) {
 //            System.out.print(track1.getId() + " ");
 //        }
-        tracksOfSecond.add(trainOnRoad2.getTrackHead());
 //        System.out.println("\nTracks of second train: ");
 //        for (Track track1 : tracksOfSecond) {
 //            System.out.print(track1.getId() + " ");
 //        }
         for(Track track1 : tracksOfFirst) {
             for (Track track2 : tracksOfSecond) {
-                boolean areConnected = track1.getStart().equals(track2.getStart()) || track1.getStart().equals(track2.getEnd()) ||
-                        track1.getEnd().equals(track2.getStart()) || track1.getEnd().equals(track2.getEnd());
-                if (areConnected && firstTrainsLength == 0 && secondTrainsLength == 0)
+                if(track1.getId() == track2.getId())
                     return true;
-                if (track1.getId() == track2.getId()) {
-                    return true;
-                }
             }
         }
         return false;

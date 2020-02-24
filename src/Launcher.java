@@ -61,27 +61,99 @@ public class Launcher {
             state.setSwitch(6, point6);
             state.setSwitch(9, point11);
             System.out.println(state.listTracks());
-//            Point point1 = new Point(0, 0);
-//            Point point2 = new Point(3, 0);
-//            Point point3 = new Point(6, 0);
-//            Point point4 = new Point(9, 0);
-//
-//
 
             depot.createTrainSet("TSAclass", "101name", 1, true, true);
             depot.createTrainSet("TSAclass", "102name", 1, true, true);
             depot.addTrain(1, "TSAclass-101name");
             depot.addTrain(1, "TSAclass-102name");
-            depot.createTrainSet("TSAclass", "103name", 2, true, true);
+            depot.createTrainSet("TSAclass", "103name", 1, true, true);
             depot.createTrainSet("TSAclass", "104name", 1, true, true);
             depot.addTrain(2, "TSAclass-103name");
             depot.addTrain(2, "TSAclass-104name");
-//            System.out.println(depot.listTrains());
-//            state.putTrain(depot.getTrain(1), new Point(12, 9), new Point(-1, 0));
-//            state.step((short)(-1));
-            state.putTrain(depot.getTrain(1), new Point(3, 2), new Point(0, -1));
-            //14, 15
+            depot.createTrainSet("TSAclass", "105name", 1, true, true);
+            depot.createTrainSet("TSAclass", "106name", 1, true, true);
+            depot.addTrain(3, "TSAclass-105name");
+            depot.addTrain(3, "TSAclass-106name");
+            depot.createTrainSet("TSAclass", "107name", 1, true, true);
+            depot.createTrainSet("TSAclass", "108name", 1, true, true);
+            depot.addTrain(4, "TSAclass-107name");
+            depot.addTrain(4, "TSAclass-108name");
+            depot.createTrainSet("TSAclass", "109name", 1, true, true);
+            depot.createTrainSet("TSAclass", "1010name", 1, true, true);
+            depot.addTrain(5, "TSAclass-109name");
+            depot.addTrain(5, "TSAclass-1010name");
+            depot.createTrainSet("TSAclass", "1011name", 1, true, true);
+            depot.createTrainSet("TSAclass", "1012name", 1, true, true);
+            depot.addTrain(6, "TSAclass-1011name");
+            depot.addTrain(6, "TSAclass-1012name");
+            depot.createTrainSet("TSAclass", "1013name", 1, true, true);
+            depot.createTrainSet("TSAclass", "1014name", 1, true, true);
+            depot.addTrain(7, "TSAclass-1013name");
+            depot.addTrain(7, "TSAclass-1014name");
+            depot.createTrainSet("TSAclass", "1015name", 1, true, true);
+            depot.createTrainSet("TSAclass", "1016name", 1, true, true);
+            depot.addTrain(8, "TSAclass-1015name");
+            depot.addTrain(8, "TSAclass-1016name");
+            //TODO (0, 0) шаг
+
+
+            state.putTrain(depot.getTrain(1), new Point(9, 14), new Point(0, 1));
+//            //good
+//            state.putTrain(depot.getTrain(2), new Point(9, 3), new Point(1, 0));
+//            //good
+//            state.putTrain(depot.getTrain(5), new Point(9, 4), new Point(0, -1));
+//            //good
+//            state.putTrain(depot.getTrain(4), new Point(11, 9), new Point(1, 0));
+//            //good
+//            state.putTrain(depot.getTrain(3), new Point(9, 7), new Point(0, -1));
+            //mistake
+//            state.putTrain(depot.getTrain(6), new Point(12, 9), new Point(1, 0));
+            //mistake
+//            state.putTrain(depot.getTrain(7), new Point(0, 0), new Point(-1, 0));
+//            //good
+//            state.putTrain(depot.getTrain(8), new Point(3, 2), new Point(0, 1));
+
             state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+            state.step((short)1);
+
+
 
     }
 }
