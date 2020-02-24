@@ -1,20 +1,28 @@
 package RailWay;
 
-import RailWay.utils.*;
+import RailWay.utils.Coach;
+import RailWay.utils.Engine;
+import RailWay.utils.SortNumCoach;
+import RailWay.utils.SortSpecialId;
+import RailWay.utils.SortTrains;
+import RailWay.utils.Sorter;
+import RailWay.utils.SpecialIdable;
+import RailWay.utils.Train;
+import RailWay.utils.TrainPart;
+import RailWay.utils.TrainSet;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-//можно ли заменить итерацию по фор лупу обычным форичем
 public class Depot {
     public Depot() {
         trainParts = new ArrayList<>();
         trains = new ArrayList<>();
     }
-    ArrayList<TrainPart> trainParts;
-    ArrayList<Train> trains;
+    private ArrayList<TrainPart> trainParts;
+    private ArrayList<Train> trains;
     //need regex
-    public void createCoach(String coachType, int length, boolean forwConnected, boolean backConnected) {
+    public final void createCoach(String coachType, int length, boolean forwConnected, boolean backConnected) {
         int idnext=0;
         List<TrainPart> coaches = trainParts.stream().filter(tp -> Coach.class.isInstance(tp)).collect(Collectors.toList());
         for(TrainPart temp : coaches) {
@@ -28,7 +36,7 @@ public class Depot {
         trainParts.add(coach);
     }
     //need regex
-    public void createEngine(String type, String engineClass, String engineName,
+    public final void createEngine(String type, String engineClass, String engineName,
                              int length, boolean forwConnected, boolean backConnected) {
         TrainPart engine = new Engine(type, engineClass, engineName, length, forwConnected, backConnected);
         if(trainParts.size()!=0)
@@ -44,7 +52,7 @@ public class Depot {
         trainParts.add(engine);
     }
     //need regex
-    public void createTrainSet(String trainsetClass, String trainsetName,
+    public final void createTrainSet(String trainsetClass, String trainsetName,
                          int length, boolean forwConnected, boolean backConnected) {
         TrainPart trainset = new TrainSet(trainsetClass, trainsetName, length, forwConnected, backConnected);
         if(trainParts.size()!=0)
@@ -60,7 +68,7 @@ public class Depot {
         System.out.println(trainsetClass + "-" + trainsetName);
         trainParts.add(trainset);
    }
-    public String listEngines() {
+    public final String listEngines() {
         String str = "";
         Iterator<TrainPart> iter = trainParts.iterator();
         while(iter.hasNext()) {
@@ -75,7 +83,7 @@ public class Depot {
         return Sorter.sortList(str, new SortSpecialId());
     }
     //train parts id here should be without 'W' prefix
-    public String listCoaches() {
+    public final String listCoaches() {
         String str = "";
         Iterator<TrainPart> iter = trainParts.iterator();
         while(iter.hasNext()) {
@@ -89,7 +97,7 @@ public class Depot {
         if(str.equals("")) return "No coach exists";
         return Sorter.sortList(str, new SortNumCoach());
     }
-    public String listTrainSets() {
+    public final String listTrainSets() {
         String str = "";
         Iterator<TrainPart> iter = trainParts.iterator();
         while(iter.hasNext()) {
@@ -103,7 +111,7 @@ public class Depot {
         if(str.equals("")) return "No train-set exists";
         return Sorter.sortList(str, new SortSpecialId());
     }
-    public void deleteRollingStock(String id) {
+    public final void deleteRollingStock(String id) {
         TrainPart trainPart = getTrainPart(id);
         if(trainPart.getTrainId()!=0) {
             System.out.println("there are no free train part with a such id");
@@ -113,14 +121,13 @@ public class Depot {
             System.out.println("OK");
         }
     }
-    public void addTrain(int trainId, String trainPartId) {
+    public final void addTrain(int trainId, String trainPartId) {
         if(!istrainIdValid(trainId)) {
             System.out.println("Incorrect train id");
             return;
         }
         if(trainPartId.matches("^W\\d$") && !trainPartId.matches("^\\w+-\\w+"))
             trainPartId = trainPartId.substring(1);
-
         TrainPart trainPart = getTrainPart(trainPartId);
         if(trainPart == null) {
             System.out.println("Train Part with this Id doesn't exist");
@@ -161,7 +168,7 @@ public class Depot {
                     }
         }
     }
-    public String listTrains() {
+    public final String listTrains() {
         if(trains.size()==0)
             return "No train exists";
         String str = "";
@@ -171,8 +178,7 @@ public class Depot {
         str += trains.get(trains.size() - 1);
         return Sorter.sortList(str, new SortTrains());
     }
-    //TODO удаляет поезд с жд
-    public void deleteTrain(int trainId) {
+    public final void deleteTrain(int trainId) {
         for (Train train: trains)
             if (train.getTrainId() == trainId) {
                 train.freeUsedTrainParts();
@@ -181,10 +187,9 @@ public class Depot {
                 return;
             }
     }
-    public TrainPart getTrainPart(String trainPartId) {
+    public final TrainPart getTrainPart(String trainPartId) {
         if(trainPartId.matches("^W\\d+$"))
             trainPartId = trainPartId.substring(1);
-
         for(TrainPart trainPart : trainParts) {
             if(Coach.class.isInstance(trainPart))
                 if(trainPartId.equals(Integer.toString(((Coach) trainPart).getId())))
@@ -199,7 +204,7 @@ public class Depot {
         System.out.println("Train Part wasn't found");
         return null;
     }
-    public void showTrain(int trainId) {
+    public final void showTrain(int trainId) {
         Optional<Train> trainToPrint = trains.stream().filter(train -> train.getTrainId() == trainId).findFirst();
         if(trainToPrint.isPresent())
             System.out.println(trainToPrint.get().showTrain());
@@ -208,7 +213,7 @@ public class Depot {
 
     }
     //use this method for train finding
-    public Train getTrain(int trainId) {
+    public final Train getTrain(int trainId) {
         for(Train train : trains) {
             if(train.getTrainId() == trainId)
                 return train;
@@ -218,9 +223,6 @@ public class Depot {
     }
     //returns false if connections dont fit
     private boolean connectTrainPart(int trainId, TrainPart trainPart) {
-
-        Iterator<Train> iterTrain = trains.iterator();
-
         for(Train train : trains) {
             if(train.getTrainId() == trainId)
                 if (train.getLastTrainPart().isBackConnection() &&

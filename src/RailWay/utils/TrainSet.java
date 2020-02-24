@@ -1,33 +1,31 @@
 package RailWay.utils;
 
-public class TrainSet extends TrainPart implements SpecialIdable {
+public final class TrainSet extends TrainPart implements SpecialIdable {
     public TrainSet(String trainsetClass, String trainsetName,
                     int length, boolean forwConnected, boolean backConnected) {
         this.trainsetClass = trainsetClass;
         this.trainsetName = trainsetName;
-        this.length = length;
-        this.forwConnection = forwConnected;
-        this.backConnection = backConnected;
+        this.setLength(length);
+        this.setForwConnection(forwConnected);
+        this.setBackConnection(backConnected);
     }
-    String trainsetClass;
-    String trainsetName;
+    private final String trainsetClass;
+    private final String trainsetName;
 
     @Override
-    public String getSpecialClass() {
+    public final String getSpecialClass() {
         return trainsetClass;
     }
-
     @Override
-    public String getSpecialName() {
+    public final String getSpecialName() {
         return trainsetName;
     }
-
     @Override
-    public String toString() {
+    public final String toString() {
         String str = "";
-        if(trainId != 0) str += trainId + " ";
+        if(getTrainId() != 0) str += getTrainId() + " ";
         else str += "none ";
-        str += trainsetClass + " " + trainsetName + " " + length + " " + forwConnection + " " + backConnection;
+        str += trainsetClass + " " + trainsetName + " " + getLength() + " " + isForwConnection() + " " + isBackConnection();
         return str;
     }
 }

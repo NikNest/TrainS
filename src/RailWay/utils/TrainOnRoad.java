@@ -1,14 +1,6 @@
 package RailWay.utils;
 
-public class TrainOnRoad {
-    Train train;
-    Track trackHead;
-    //direction of moving forward
-    boolean isStartDirection;
-    Point positionHead;
-    boolean crashed = false;
-    boolean movingBack = false;
-
+public final class TrainOnRoad {
     public TrainOnRoad(Train train, Track track, boolean isStartDirection, Point currentPosition) {
         this.train = train;
         this.trackHead = track;
@@ -16,48 +8,45 @@ public class TrainOnRoad {
         this.positionHead = currentPosition;
 
     }
-
-    public boolean isMovingBack() {
-        return movingBack;
-    }
-
-    public void setMovingBack(boolean movingBack) {
+    private Train train;
+    private Track trackHead;
+    //direction of moving forward
+    private boolean isStartDirection;
+    private Point positionHead;
+    private boolean crashed = false;
+    private boolean movingBack = false;
+    public final void setMovingBack(boolean movingBack) {
         this.movingBack = movingBack;
     }
-
-    public void setStartDirection(boolean isStartDirection) {
+    public final void setStartDirection(boolean isStartDirection) {
         this.isStartDirection = isStartDirection;
     }
-    public boolean isCrashed() {
-        return crashed;
-    }
-
-    public void setCrashed(boolean crashed) {
+    public final void setCrashed(boolean crashed) {
         this.crashed = crashed;
     }
-
-    public Train getTrain() {
+    public final boolean isMovingBack() {
+        return movingBack;
+    }
+    public final boolean isCrashed() {
+        return crashed;
+    }
+    public final Train getTrain() {
         return train;
     }
-    public int getLengthHead() {
-        return isStartDirection ? Math.abs(positionHead.getX() + positionHead.getY() - trackHead.getEnd().getX() - trackHead.getEnd().getY()) :
-                Math.abs(positionHead.getX() + positionHead.getY() - trackHead.getStart().getX() - trackHead.getStart().getY());
-    }
-    public int getLength() {
+    public final int getLength() {
         return train.getTrainLength();
     }
-    public Track getTrackHead() {
+    public final Track getTrackHead() {
         return trackHead;
     }
-    public boolean isStartDirection() {
+    public final boolean isStartDirection() {
         return isStartDirection;
     }
-    public Point getPositionHead() {
+    public final Point getPositionHead() {
         return positionHead;
     }
-
     @Override
-    public String toString() {
+    public final String toString() {
         return "Train " + train.getTrainId() + " at " + positionHead;
     }
 }

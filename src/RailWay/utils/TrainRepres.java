@@ -1,8 +1,8 @@
 package RailWay.utils;
 
-public class TrainRepres {
+public final class TrainRepres {
     //6*20
-    public static String[] STEAM_ENGINE = {
+    public static final String[] STEAM_ENGINE = {
             "     ++      +------",
             "     ||      |+-+ | ",
             "   /---------|| | | ",
@@ -11,7 +11,7 @@ public class TrainRepres {
             "//// \\_/      \\_/   "
     };
     //7*23
-    public static String[] ELECTRICAL_ENGINE = {
+    public static final String[] ELECTRICAL_ENGINE = {
             "               ___    ",
             "                 \\    ",
             "  _______________/__  ",
@@ -22,7 +22,7 @@ public class TrainRepres {
             "  (O)(O)      (O)(O)  "
     };
     //6*23
-    public static String[] DIESEL_ENGINE = {
+    public final static String[] DIESEL_ENGINE = {
       "  _____________|____  ",
       " /_| ____________ |_\\ ",
       "/   |____________|   \\",
@@ -32,7 +32,7 @@ public class TrainRepres {
     };
     //passenger , freight , special
     //6*20
-    public static String[] PASSENGER_COUCH = {
+    public final static String[] PASSENGER_COUCH = {
             "____________________",
             "|  ___ ___ ___ ___ |",
             "|  |_| |_| |_| |_| |",
@@ -41,7 +41,7 @@ public class TrainRepres {
             "   (O)        (O)   "
     };
     //5*20
-    public static String[] FREIGHT_COUCH = {
+    public static final String[] FREIGHT_COUCH = {
             "|                  |",
             "|                  |",
             "|                  |",
@@ -49,7 +49,7 @@ public class TrainRepres {
             "   (O)        (O)   "
     };
     //7*19
-    public static String[] SPECIAL_COUCH = {
+    public static final String[] SPECIAL_COUCH = {
             "               ____",
             "/--------------|  |",
             "\\--------------|  |",
@@ -59,7 +59,7 @@ public class TrainRepres {
             "   (O)       (O)   "
     };
     //8*20
-    public static String[] TRAIN_SET = {
+    public static final String[] TRAIN_SET = {
             "         ++         ",
             "         ||         ",
             "_________||_________",

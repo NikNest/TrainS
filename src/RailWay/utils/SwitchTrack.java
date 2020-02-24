@@ -1,84 +1,66 @@
 package RailWay.utils;
 
-public class SwitchTrack extends Track{
-//    Point end;
-    Point end2;
-    boolean switchSetted = false;
-//    boolean firstEndPoint;
-    boolean firstendConnected;
-    boolean secondendConnected;
-
-    public void setFirstendConnected(boolean state) {
-        firstendConnected = state;
-    }
-    public void setSecondendConnected(boolean state) {
-        secondendConnected = state;
-    }
-
+public final class SwitchTrack extends Track{
     public SwitchTrack(Point start, Point end, Point end2) {
-        //rewrite super
-        super(start);
-        this.start = start;
-        this.end = end;
+        super(start, end);
         this.end2 = end2;
     }
+    private Point end2;
+    private boolean switchSetted = false;
+    private boolean firstendConnected;
+    private boolean secondendConnected;
 
-    public boolean isFirstendConnected() {
-        return firstendConnected;
-    }
-
-    public boolean isSecondendConnected() {
-        return secondendConnected;
-    }
-
-    public boolean isSwitchSetted() {
+    public final boolean isSwitchSetted() {
         return switchSetted;
     }
-    public int getLength(){
-            return start.countLength(end);
-        }
-    public void setEndconnected(boolean flag, Point point) {
-        if(end.equals(point)) {
+
+    public final Point getEnd2() {
+        return end2;
+    }
+    public final void setSecondendConnected(boolean state) {
+        secondendConnected = state;
+    }
+    public final void setEndconnected(boolean flag, Point point) {
+        if(getEnd().equals(point)) {
             firstendConnected = flag;
         } else if(end2.equals(point)) {
             secondendConnected = flag;
         }
     }
     //if start not connected then it could be only one valid direction
-    public void setDirection(Point direction) {
-        if (end.equals(direction)) {
+    public final void setDirection(Point direction) {
+        if (getEnd().equals(direction)) {
             switchSetted = true;
         } else if(end2.equals(direction)){
             Point temp = end2;
-            end2 = end;
-            end = temp;
+            end2 = getEnd();
+            setEnd(temp);
             switchSetted = true;
             boolean flag = firstendConnected;
             firstendConnected = secondendConnected;
             secondendConnected = flag;
         }
     }
-
-    public void unsetDirection() {
-        switchSetted = false;
-    }
-
     @Override
-    public Point getCommonPoint(Track track) {
+    public int getLength(){
+        return getStart().countLength(getEnd());
+    }
+    @Override
+    public final Point getCommonPoint(Track track) {
         //maby dont use isconnected here because there no reason to use it here
         if(this.isConnectedWith(track)) {
             if(SwitchTrack.class.isInstance(track)) {
-                if(((SwitchTrack) track).getEnd2().equals(start))
-                    return start;
-                else if (((SwitchTrack) track).getEnd2().equals(end))
-                    return end;
+                if(((SwitchTrack) track).getEnd2().equals(getStart()))
+                    return getStart();
+                else if (((SwitchTrack) track).getEnd2().equals(getEnd()))
+                    return getEnd();
                 else if (((SwitchTrack) track).getEnd2().equals(end2))
                     return end2;
             }
-            if(track.getStart().equals(start) || track.getEnd().equals(start))
-                return start;
-            else if(track.getStart().equals(end) || track.getEnd().equals(end))
-                return end;
+            if(track.getStart().equals(getStart()) || track.getEnd().equals(getStart()))
+                return getStart();
+            else if(track.getStart().equals(getEnd()) || track.getEnd().equals(getEnd()))
+                return getEnd();
             else if (track.getStart().equals(end2) || track.getEnd().equals(end2))
                 return end2;
             else
@@ -86,53 +68,45 @@ public class SwitchTrack extends Track{
         } else
             return null;
     }
-
     @Override
-    public boolean connect(Point connectionPoint) {
-        if(connectionPoint.equals(start)) {
+    public final boolean connect(Point connectionPoint) {
+        if(connectionPoint.equals(getStart())) {
             setStartConnected(true);
             return true;
-        } else if(connectionPoint.equals(end) || connectionPoint.equals(end2)) {
+        } else if(connectionPoint.equals(getEnd()) || connectionPoint.equals(end2)) {
             setEndconnected(true, connectionPoint);
             return true;
         }
         return false;
     }
-
-    public Point getEnd2() {
-        return end2;
-    }
-
     @Override
-    public boolean isConnectedWith(Track track) {
+    public final boolean isConnectedWith(Track track) {
         if(SwitchTrack.class.isInstance(track)) {
             if(((SwitchTrack)track).equals(this))
                 return false;
-            if(((SwitchTrack)track).getEnd2().equals(end) || ((SwitchTrack)track).getEnd2().equals(start) || ((SwitchTrack)track).getEnd2().equals(end2))
+            if(((SwitchTrack)track).getEnd2().equals(getEnd()) || ((SwitchTrack)track).getEnd2().equals(getStart())
+                    || ((SwitchTrack)track).getEnd2().equals(end2))
                 return true;
         }
-        if (track.getStart().equals(end) || track.getEnd().equals(end)
+        if (track.getStart().equals(getEnd()) || track.getEnd().equals(getEnd())
                 || track.getStart().equals(end2) || track.getEnd().equals(end2)
-                || track.getStart().equals(start) || track.getEnd().equals(start)) {
+                || track.getStart().equals(getStart()) || track.getEnd().equals(getStart())) {
             return true;
         } else
             return false;
     }
-    //TODO check instace of
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if(!SwitchTrack.class.isInstance(obj))
             return false;
         if(Track.class.isInstance(obj))
             return false;
-        return (this.start == ((Track)obj).start || this.start == ((Track)obj).end)
-                && (this.end == ((Track)obj).start || this.end == ((Track)obj).end);
+        return (this.getStart() == ((Track) obj).getStart() || this.getStart() == ((Track) obj).getEnd())
+                && (this.getEnd() == ((Track) obj).getStart() || this.getEnd() == ((Track) obj).getEnd());
     }
-
-    //s 2 (5,1) -> (8,1),(5,3)
     @Override
-    public String toString() {
-        String str = "s " + id + " " + start + " -> " + end + "," + end2;
+    public final String toString() {
+        String str = "s " + super.getId() + " " + super.getStart() + " -> " + super.getEnd() + "," + end2;
         if(switchSetted) str += " " + getLength();
         return str;
     }

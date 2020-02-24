@@ -1,35 +1,31 @@
 package RailWay.utils;
 
-public class Coach extends TrainPart {
+public final class Coach extends TrainPart {
     public Coach(String coachType, int length, boolean forwConnected, boolean backConnected, int id) {
-        //this.trainPartType = "coach";
         this.type = coachType;
-        this.length = length;
-        this.forwConnection = forwConnected;
-        this.backConnection = backConnected;
+        this.setLength(length);
+        this.setForwConnection(forwConnected);
+        this.setBackConnection(backConnected);
         this.id = id;
     }
-    String type;
-    int id;
+    private final String type;
+    private final int id;
     static int lastCoachId = 0;
-//    public void initId() {
-//        this.id = ++lastCoachId;
-//    }
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
-    public String getType() {
+    public final String getType() {
         return type;
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         String str = "";
         str += id + " ";
-        if(trainId != 0) str += trainId + " ";
+        if(getTrainId() != 0) str += getTrainId() + " ";
         else str += "none ";
-        str += type + " " + length + " " + forwConnection + " " + backConnection;
+        str += type + " " + getLength() + " " + isForwConnection() + " " + isBackConnection();
         return str;
     }
 }

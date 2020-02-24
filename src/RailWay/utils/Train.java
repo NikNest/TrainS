@@ -1,49 +1,18 @@
 package RailWay.utils;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
-public class Train {
+public final class Train {
     public Train(int trainId) {
      this.trainId = trainId;
      trainParts = new ArrayList<>();
     }
-    int trainId = 0;
-    //возможно вообще без этой переменной можно
-//    static int lastTrainId = 0;
-    ArrayList<TrainPart> trainParts;
+    private int trainId = 0;
+    private ArrayList<TrainPart> trainParts;
 
-
-//    //retrun num for W, smth-smth else
-//    public ArrayList<TrainPart> getTrainParts() {
-//        return trainParts;
-//    }
-    public int getTrainLength() {
-        int length = 0;
-        for(TrainPart part : trainParts) {
-            length += part.getLength();
-        }
-        return length;
-    }
-    public int getTrainId() {
-        return trainId;
-    }
-    public void addTrainPart(TrainPart trainPart) {
-        //trainPart.setTrainId(this.trainId);
-        trainParts.add(trainPart);
-    }
-    public TrainPart getLastTrainPart() {
-        return trainParts.get(trainParts.size()-1);
-    }
-
-    public void freeUsedTrainParts() {
-        trainParts.stream().forEach(tp -> tp.setTrainId(0));
-        trainParts.clear();
-    }
-    private String generateLine(int size) {
+    private final String generateLine(int size) {
         String line = "";
         while(size>0) {
             line += " ";
@@ -51,7 +20,7 @@ public class Train {
         }
         return line;
     }
-    private void addTrainPartPicture(ArrayList<String> globalPicture, String[] trainPartPicure) {
+    private final void addTrainPartPicture(ArrayList<String> globalPicture, String[] trainPartPicure) {
 
         if(globalPicture.size()==0) {
             for (int i = trainPartPicure.length-1; i>=0; i--) {
@@ -60,8 +29,8 @@ public class Train {
         } else {
             if(globalPicture.size() >= trainPartPicure.length){
                 for (int i = trainPartPicure.length-1; i >= 0; i--) {
-                     globalPicture.set(trainPartPicure.length - 1 - i,
-                             globalPicture.get(trainPartPicure.length - 1 - i) + " " + trainPartPicure[i]);
+                    globalPicture.set(trainPartPicure.length - 1 - i,
+                            globalPicture.get(trainPartPicure.length - 1 - i) + " " + trainPartPicure[i]);
                 }
                 for (int i = trainPartPicure.length; i < globalPicture.size();i++) {
                     globalPicture.set(i, globalPicture.get(i) + " " + generateLine(trainPartPicure[0].length()));
@@ -72,14 +41,35 @@ public class Train {
                     globalPicture.add(generateLine(globalPicture.get(0).length()));
                 }
                 for (int i = trainPartPicure.length-1; i>=0; i--) {
-                        globalPicture.set(trainPartPicure.length - 1 - i,
+                    globalPicture.set(trainPartPicure.length - 1 - i,
                             globalPicture.get(trainPartPicure.length - 1 - i) + " " + trainPartPicure[i]);
                 }
 
             }
         }
     }
-    public String showTrain() {
+    public final void freeUsedTrainParts() {
+        trainParts.stream().forEach(tp -> tp.setTrainId(0));
+        trainParts.clear();
+    }
+    public final void addTrainPart(TrainPart trainPart) {
+        //trainPart.setTrainId(this.trainId);
+        trainParts.add(trainPart);
+    }
+    public final int getTrainLength() {
+        int length = 0;
+        for(TrainPart part : trainParts) {
+            length += part.getLength();
+        }
+        return length;
+    }
+    public final int getTrainId() {
+        return trainId;
+    }
+    public final TrainPart getLastTrainPart() {
+        return trainParts.get(trainParts.size()-1);
+    }
+    public final String showTrain() {
         ArrayList<String> picture = new ArrayList<>();
         Iterator<TrainPart> trainPartIterator = trainParts.iterator();
         for(int i = 0; i < trainParts.size() ; i++) {
@@ -112,7 +102,7 @@ public class Train {
             pic += picture.get(picture.size()-1);
         return pic;
     }
-    public boolean isTrainValid() {
+    public final boolean isTrainValid() {
         if (Engine.class.isInstance(trainParts.get(0)) ||
                 Engine.class.isInstance(trainParts.get(trainParts.size()-1)) ||
                 TrainSet.class.isInstance(trainParts.get(0)))
@@ -121,21 +111,16 @@ public class Train {
             return false;
     }
     @Override
-    public String toString() {
+    public final String toString() {
         String str = trainId + " ";
-        for(int i = 0; i < trainParts.size()-1; i++) {
+        for(int i = 0; i < trainParts.size(); i++) {
             if(Coach.class.isInstance(trainParts.get(i)))
                 str += "W" + ((Coach)trainParts.get(i)).getId() + " ";
             else
                 str += ((SpecialIdable)trainParts.get(i)).getSpecialClass() + "-" +
                         ((SpecialIdable)trainParts.get(i)).getSpecialName() +  " ";
         }
-        if(Coach.class.isInstance(trainParts.get(trainParts.size() - 1)))
-            str += "W" + ((Coach)trainParts.get(trainParts.size() - 1)).getId();
-        else
-            str += ((SpecialIdable)trainParts.get(trainParts.size() - 1)).getSpecialClass() + "-" +
-                    ((SpecialIdable)trainParts.get(trainParts.size() - 1)).getSpecialName();
-        return str;
+        return str.trim();
     }
 
 }
