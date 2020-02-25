@@ -1,25 +1,26 @@
 import RailWay.*;
+import RailWay.utils.IncorrectInputException;
 import RailWay.utils.Point;
 import RailWay.utils.Track;
 
 public class Launcher {
-    public static void main(String[] args) {
-            Depot depot = new Depot();
-
-            depot.createEngine("electrical", "NMAclass", "001name", 3, true, true);
-            depot.createEngine("steam", "NMBclass", "002name", 5, true, true);
-            depot.createEngine("diesel", "NMCclass", "003name", 7, true, true);
-            depot.createCoach("passenger", 13, true, true);
-            depot.createCoach("freight", 23, true, true);
-            depot.createCoach("special", 33, true, true);
-            depot.createTrainSet("TSAclass", "101name", 53, true, false);
-            depot.createTrainSet("TSAclass", "102name", 73, true, true);
-            depot.createTrainSet("TSBclass", "103name", 93, false, true);
-//            RWState state = new RWState();
+    public static void main(String[] args) throws IncorrectInputException {
+//            Depot depot = new Depot();
 //
-//            Point point1 = new Point(0, 0);
-//            Point point2 = new Point(3, 0);
-//            Point point3 = new Point(3, 3);
+//            depot.createEngine("electrical", "NMAclass", "001name", 3, true, true);
+//            depot.createEngine("steam", "NMBclass", "002name", 5, true, true);
+//            depot.createEngine("diesel", "NMCclass", "003name", 7, true, true);
+//            depot.createCoach("passenger", 13, true, true);
+//            depot.createCoach("freight", 23, true, true);
+//            depot.createCoach("special", 33, true, true);
+//            depot.createTrainSet("TSAclass", "101name", 53, true, false);
+//            depot.createTrainSet("TSAclass", "102name", 73, true, true);
+//            depot.createTrainSet("TSBclass", "103name", 93, false, true);
+//            RWState state = new RWState();
+
+//            Point point1 = new Point(0, -3);
+//            Point point2 = new Point(0, 0);
+//            Point point3 = new Point(3, 0);
 //            Point point4 = new Point(6, 3);
 //            Point point5 = new Point(9, 3);
 //            Point point6 = new Point(9, 6);
@@ -92,8 +93,7 @@ public class Launcher {
 //            depot.addTrain(8, "TSAclass-1015name");
 //            depot.addTrain(8, "TSAclass-1016name");
 //
-//            //TODO COLLECTIONS.SORT испоьзовать лямбда выражения
-//            state.putTrain(depot.getTrain(1), new Point(4, 3), new Point(1, 0));
+//            state.putTrain(depot.getTrain(1), new Point(0, 0), new Point(1, 0));
 ////            state.putTrain(depot.getTrain(2), new Point(8, 3), new Point(1, 0));
 ////            state.putTrain(depot.getTrain(5), new Point(9, 4), new Point(0, -1));
 ////            state.putTrain(depot.getTrain(4), new Point(11, 9), new Point(1, 0));
@@ -109,6 +109,7 @@ public class Launcher {
 ////            state.deleteTrack(13);
 //            state.setSwitch(3, point4);
 //            state.step((short)1);
-
+        UserInteface ui = new UserInteface();
+        ui.startGame();
     }
 }

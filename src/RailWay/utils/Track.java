@@ -82,15 +82,26 @@ public class Track {
         } else
             return false;
     }
+    public boolean areIlligalConnected(Track track) {
+        if(SwitchTrack.class.isInstance(track)) {
+            if(this.getStart().equals(((SwitchTrack)track).getEnd2()) && (this.getEnd().equals(((Track)track).getEnd()) || this.getEnd().equals(((Track)track).getStart())) )
+                return true;
+            if(this.getEnd().equals(((SwitchTrack)track).getEnd2()) && (this.getStart().equals(((Track)track).getEnd()) || this.getStart().equals(((Track)track).getStart())) )
+                return true;
+            return false;
+        } else
+            return track.equals(this);
 
+    }
     @Override
     public String toString() {
         return "t " + id + " " + start + " -> " + end + " " + length;
     }
     @Override
     public boolean equals(Object obj) {
-        if(SwitchTrack.class.isInstance(obj))
-            return false;
+        if(SwitchTrack.class.isInstance(obj)) {
+           return false;
+        }
         if(!Track.class.isInstance(obj))
             return false;
         return (this.start == ((Track)obj).start || this.start == ((Track)obj).end)

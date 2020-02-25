@@ -14,8 +14,21 @@ public final class RWState {
     }
     private ArrayList<Track> tracks;
     private ArrayList<TrainOnRoad> trains;
-
-    public final void step(short speed) {
+    public final ArrayList<TrainOnRoad> updTrainsState() {
+        ArrayList<TrainOnRoad> temp = new ArrayList<>();
+        for(TrainOnRoad train : trains) {
+            if (train.getTrain() != null)
+                temp.add(train);
+        }
+        return temp;
+    }
+    public final void step(short speed) throws IncorrectInputException{
+        for(Track track : tracks) {
+            if (SwitchTrack.class.isInstance(track))
+                if (!((SwitchTrack)track).isSwitchSetted())
+                    throw new IncorrectInputException("not all the switches are setted");
+        }
+        trains = updTrainsState();
         ArrayList<TrainOnRoad> movingTrains = new ArrayList<>();
         if (trains.size() == 0) {
             System.out.println("OK");
@@ -30,7 +43,7 @@ public final class RWState {
         System.out.println(str);
         trains = removeCrashedTrains(movingTrains);
     }
-    public final void addTrack(Point start, Point end) {
+    public final void addTrack(Point start, Point end) throws IncorrectInputException{
         if (!start.equals(end) && ((start.getY() == end.getY()) || (start.getX() == end.getX()))) {
             Track temp = new Track(start, end);
             if(tracks.size()==0) {
@@ -39,6 +52,8 @@ public final class RWState {
                 System.out.println(temp.getId());
             } else {
                 for(Track track : tracks) {
+                    if(temp.areIlligalConnected(track))
+                        throw new IncorrectInputException("There is a track already on these points");
                     if (temp.getCommonPoint(track) != null) {
                         if(SwitchTrack.class.isInstance(track)) {
                             ((SwitchTrack) track).connect(temp.getCommonPoint(track));
@@ -51,12 +66,12 @@ public final class RWState {
                             return;
                     }
                 }
-                System.out.println("wrong connection");
+                throw new IncorrectInputException("wrong connection");
             }
         } else
-            System.out.println("invalid track: not straight or 0 length");
+            throw new IncorrectInputException("invalid track: not straight or 0 length");
     }
-    public final void addSwitch(Point start, Point end, Point end2){
+    public final void addSwitch(Point start, Point end, Point end2) throws IncorrectInputException{
             if((!start.equals(end) && ((start.getY() == end.getY()) || (start.getX() == end.getX()))) &&
                 (!start.equals(end2) && ((start.getY() == end2.getY()) || (start.getX() == end2.getX()))) &&
                     !end.equals(end2)) {
@@ -67,6 +82,8 @@ public final class RWState {
                     System.out.println(temp.getId());
                 } else {
                     for (Track track : tracks) {
+                        if(temp.areIlligalConnected(track))
+                            throw new IncorrectInputException("There is a track already on these points");
                         if (temp.getCommonPoint(track) != null) {
                             if (SwitchTrack.class.isInstance(track)) {
                                 ((SwitchTrack) track).connect(temp.getCommonPoint(track));
@@ -79,17 +96,17 @@ public final class RWState {
                             return;
                         }
                     }
-                    System.out.println("wrong connection");
+                    throw new IncorrectInputException("wrong connection");
                 }
             } else
-                System.out.println("invalid switch-track: not straight");
+                throw new IncorrectInputException("invalid switch-track: not straight");
     }
-    public final void setSwitch(int id, Point end) {
+    public final void setSwitch(int id, Point end) throws IncorrectInputException{
+        trains = updTrainsState();
         for(Track track : tracks) {
             if(track.getId() == id) {
                 if(!SwitchTrack.class.isInstance(track)) {
-                    System.out.println("wrong switch id");
-                    return;
+                  throw new IncorrectInputException("Wrong switch id");
                 }
                 if(((SwitchTrack)track).getEnd2().equals(end) || track.getEnd().equals(end) || track.getStart().equals(end)) {
                         ((SwitchTrack) track).setDirection(end);
@@ -107,12 +124,11 @@ public final class RWState {
                         }
                         return;
                 } else {
-                    System.out.println("wrong switch point");
-                    return;
+                    throw new IncorrectInputException("wrong switch point");
                 }
             }
         }
-        System.out.println("Track with this id doesn't exist");
+        throw new IncorrectInputException("Track with this id doesn't exist");
     }
     public final String listTracks() {
         String str = "";
@@ -128,7 +144,8 @@ public final class RWState {
             str = "No track exists";
         return Sorter.sortList(str, new SortNumTrack());
     }
-    public final void deleteTrack(int trackId) {
+    public final void deleteTrack(int trackId) throws IncorrectInputException{
+        trains = updTrainsState();
         for(Track track : tracks) {
             if(trackId == track.getId()) {
                 if(isRWValidIfTrackDeleted(track)) {
@@ -143,19 +160,18 @@ public final class RWState {
                     System.out.println("OK");
                     return;
                 }
-                System.out.println("track with this id couldn't be deleted");
-                return;
+                throw new IncorrectInputException("track with this id couldn't be deleted");
             }
         }
-        System.out.println("track with this id not found");
+        throw new IncorrectInputException("track with this id not found");
     }
-    public final void putTrain(Train train, Point pointFrom, Point direction) {
+    public final void putTrain(Train train, Point pointFrom, Point direction) throws IncorrectInputException{
+        trains = updTrainsState();
         direction = getPointFromDirection(pointFrom, direction);
         for(Track track : tracks) {
             if(track instanceof SwitchTrack) {
                 if(!((SwitchTrack) track).isSwitchSetted()) {
-                    System.out.println("Not all the switches are setted!");
-                    return;
+                    throw new IncorrectInputException("Not all the switches are setted");
                 }
             }
         }
@@ -164,8 +180,7 @@ public final class RWState {
             if (train.isTrainValid()) {
                     Track track = findTrack(pointFrom, direction);
                     if(track == null) {
-                        System.out.println("track not found");
-                        return;
+                        throw new IncorrectInputException("track not found");
                     }
                     TrainOnRoad trainOnRoad = new TrainOnRoad(train, track, isStartDirection(track, pointFrom, direction), pointFrom);
                     ArrayList<Track> temp = (ArrayList<Track>) tracks.clone();
@@ -193,22 +208,20 @@ public final class RWState {
                         availableTracksLength += track1.getLength();
                     }
                     if(availableTracksLength < train.getTrainLength()) {
-                        System.out.println("there are not enogh place for this train");
-                        return;
+                        throw new IncorrectInputException("there are not enough space on the track for this train");
                     }
                     for(TrainOnRoad tempTrainOnRoad : trains) {
                         if(haveCommonTracks(tempTrainOnRoad, trainOnRoad)) {
-                            System.out.println("there is a train already on these tracks");
-                            return;
+                            throw new IncorrectInputException("there is a train already on these tracks");
                         }
                     }
                     trains.add(trainOnRoad);
                     System.out.println("OK");
                 } else {
-                System.out.println("Train isn't valid");
+                throw new IncorrectInputException("train isn't valid");
             }
         } else {
-            System.out.println("wrong direction");
+            throw new IncorrectInputException("wrong direction");
         }
     }
     public final ArrayList<Track> getTracksFromTrainOnRoad(TrainOnRoad train) {
@@ -611,12 +624,12 @@ public final class RWState {
     }
     private Track findTrack(Point pointFrom, Point direction) {
         for(Track track : tracks) {
+            //flat situation
             if(pointBelongsTrack(pointFrom, track)) {
                 boolean dirTrack = track.getEnd().getY() == track.getStart().getY();
                 boolean dirSetted = pointFrom.getY() == direction.getY();
                 if(dirTrack == dirSetted) {
                     if(pointFrom.equals(track.getEnd())) {
-                        //positiv direction
                         boolean trackDirection = track.getEnd().getX() + track.getEnd().getY() - track.getStart().getY() - track.getStart().getX() > 0;
                         boolean directionOutside = trackDirection ? direction.getX() + direction.getY() - track.getEnd().getX() - track.getEnd().getY() > 0
                                 : direction.getX() + direction.getY() - track.getEnd().getX() - track.getEnd().getY() < 0;
@@ -635,8 +648,6 @@ public final class RWState {
                         } else
                             return track;
                     } else if (pointFrom.equals(track.getStart())) {
-//                        System.out.println("side: " + (direction.getX() + direction.getY() - track.getEnd().getX() - track.getEnd().getY())
-//                         + "length: " + (-(track.getEnd().getX() + track.getEnd().getY() - track.getStart().getX() - track.getStart().getY())));
                         boolean trackDirection = track.getEnd().getX() + track.getEnd().getY() - track.getStart().getY() - track.getStart().getX() > 0;
                         boolean directionOutside = !trackDirection ? direction.getX() + direction.getY() - track.getStart().getX() - track.getStart().getY() > 0
                                 : direction.getX() + direction.getY() - track.getStart().getX() - track.getStart().getY() < 0;
@@ -658,8 +669,15 @@ public final class RWState {
                         return track;
                     }
                 }
-//                System.out.println("Point : " + pointFrom + " belongs to the track: " + track.getId());
-//                System.out.println(dirTrack + " " + dirSetted);
+            }
+            //corner situation
+            for(Track tempTrack : tracks) {
+                if(tempTrack.getStart().equals(pointFrom) || tempTrack.getEnd().equals(pointFrom)) {
+                    boolean dirVertTemp = (tempTrack.getEnd().getX() == tempTrack.getStart().getX());
+                    boolean dirVertTrack = (pointFrom.getX() == direction.getX());
+                    if(dirVertTemp == dirVertTrack)
+                        return tempTrack;
+                }
             }
         }
         return null;

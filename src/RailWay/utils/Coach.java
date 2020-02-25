@@ -25,7 +25,13 @@ public final class Coach extends TrainPart {
         str += id + " ";
         if(getTrainId() != 0) str += getTrainId() + " ";
         else str += "none ";
-        str += type + " " + getLength() + " " + isForwConnection() + " " + isBackConnection();
+        if(type.equals("passenger"))
+            str += "p";
+        else if(type.equals("freight"))
+            str += "f";
+        else
+            str += "s";
+        str += " " + getLength() + " " + isForwConnection() + " " + isBackConnection();
         return str;
     }
 }

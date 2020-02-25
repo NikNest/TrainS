@@ -1,5 +1,7 @@
 package RailWay.utils;
 
+import java.util.ArrayList;
+
 public final class SwitchTrack extends Track{
     public SwitchTrack(Point start, Point end, Point end2) {
         super(start, end);
@@ -41,6 +43,28 @@ public final class SwitchTrack extends Track{
             secondendConnected = flag;
         }
     }
+
+    @Override
+    public boolean areIlligalConnected(Track track) {
+        Point[] thisTrackPoints = {getStart(), getEnd(), getEnd2()};
+        Point[] secondTrackPoints;
+        if(track instanceof SwitchTrack) {
+            secondTrackPoints = new Point[]{track.getStart(), track.getEnd(), ((SwitchTrack) track).getEnd2()};
+        }
+        else {
+            secondTrackPoints = new Point[]{track.getStart(), track.getEnd()};
+        }
+        int commonPointsNum = 0;
+        for(Point point1 : thisTrackPoints) {
+            for (Point point2 : secondTrackPoints) {
+                if(point1.equals(point2))
+                    commonPointsNum++;
+            }
+        }
+        return commonPointsNum > 1;
+
+    }
+
     @Override
     public int getLength(){
         return getStart().countLength(getEnd());
@@ -49,7 +73,7 @@ public final class SwitchTrack extends Track{
     public final Point getCommonPoint(Track track) {
         //maby dont use isconnected here because there no reason to use it here
         if(this.isConnectedWith(track)) {
-            if(SwitchTrack.class.isInstance(track)) {
+            if(track instanceof SwitchTrack) {
                 if(((SwitchTrack) track).getEnd2().equals(getStart()))
                     return getStart();
                 else if (((SwitchTrack) track).getEnd2().equals(getEnd()))
@@ -81,19 +105,16 @@ public final class SwitchTrack extends Track{
     }
     @Override
     public final boolean isConnectedWith(Track track) {
-        if(SwitchTrack.class.isInstance(track)) {
-            if(((SwitchTrack)track).equals(this))
+        if(track instanceof SwitchTrack) {
+            if(track.equals(this))
                 return false;
             if(((SwitchTrack)track).getEnd2().equals(getEnd()) || ((SwitchTrack)track).getEnd2().equals(getStart())
                     || ((SwitchTrack)track).getEnd2().equals(end2))
                 return true;
         }
-        if (track.getStart().equals(getEnd()) || track.getEnd().equals(getEnd())
-                || track.getStart().equals(end2) || track.getEnd().equals(end2)
-                || track.getStart().equals(getStart()) || track.getEnd().equals(getStart())) {
-            return true;
-        } else
-            return false;
+            return track.getStart().equals(getEnd()) || track.getEnd().equals(getEnd())
+                    || track.getStart().equals(end2) || track.getEnd().equals(end2)
+                    || track.getStart().equals(getStart()) || track.getEnd().equals(getStart());
     }
     @Override
     public final boolean equals(Object obj) {

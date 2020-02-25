@@ -1,15 +1,6 @@
 package RailWay;
 
-import RailWay.utils.Coach;
-import RailWay.utils.Engine;
-import RailWay.utils.SortNumCoach;
-import RailWay.utils.SortSpecialId;
-import RailWay.utils.SortTrains;
-import RailWay.utils.Sorter;
-import RailWay.utils.SpecialIdable;
-import RailWay.utils.Train;
-import RailWay.utils.TrainPart;
-import RailWay.utils.TrainSet;
+import RailWay.utils.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,14 +28,13 @@ public class Depot {
     }
     //need regex
     public final void createEngine(String type, String engineClass, String engineName,
-                             int length, boolean forwConnected, boolean backConnected) {
+                             int length, boolean forwConnected, boolean backConnected) throws IncorrectInputException {
         TrainPart engine = new Engine(type, engineClass, engineName, length, forwConnected, backConnected);
         if(trainParts.size()!=0)
         for(TrainPart trainPart : trainParts) {
             if(SpecialIdable.class.isInstance(trainPart)) {
                 if (SpecialIdable.haveSameSpecialId((SpecialIdable) trainPart,(SpecialIdable) engine)) {
-                    System.out.println("There is already a trainpart with the same id");
-                    return;
+                    throw new IncorrectInputException("There is already a trainpart with the same id");
                 }
             }
         }
@@ -53,15 +43,14 @@ public class Depot {
     }
     //need regex
     public final void createTrainSet(String trainsetClass, String trainsetName,
-                         int length, boolean forwConnected, boolean backConnected) {
+                         int length, boolean forwConnected, boolean backConnected) throws IncorrectInputException{
         TrainPart trainset = new TrainSet(trainsetClass, trainsetName, length, forwConnected, backConnected);
         if(trainParts.size()!=0)
         for(TrainPart trainPart : trainParts) {
            if(SpecialIdable.class.isInstance(trainPart)) {
 
                if (SpecialIdable.haveSameSpecialId((SpecialIdable) trainPart,(SpecialIdable) trainset)) {
-                   System.out.println("There is already a trainpart with the same id");
-                   return;
+                   throw new IncorrectInputException("There is already a trainpart with the same id");
                }
            }
         }
@@ -111,40 +100,35 @@ public class Depot {
         if(str.equals("")) return "No train-set exists";
         return Sorter.sortList(str, new SortSpecialId());
     }
-    public final void deleteRollingStock(String id) {
+    public final void deleteRollingStock(String id) throws IncorrectInputException {
         TrainPart trainPart = getTrainPart(id);
-        if(trainPart.getTrainId()!=0) {
-            System.out.println("there are no free train part with a such id");
-
+        if(trainPart.getTrainId() != 0) {
+            throw new IncorrectInputException("there are no free train part with a such id");
         } else {
             trainParts.remove(trainPart);
             System.out.println("OK");
         }
     }
-    public final void addTrain(int trainId, String trainPartId) {
+    public final void addTrain(int trainId, String trainPartId) throws IncorrectInputException{
         if(!istrainIdValid(trainId)) {
-            System.out.println("Incorrect train id");
-            return;
+            throw new IncorrectInputException("Incorrect input id");
         }
         if(trainPartId.matches("^W\\d$") && !trainPartId.matches("^\\w+-\\w+"))
             trainPartId = trainPartId.substring(1);
         TrainPart trainPart = getTrainPart(trainPartId);
         if(trainPart == null) {
-            System.out.println("Train Part with this Id doesn't exist");
-            return;
+            throw new IncorrectInputException("Train Part with this Id doesn't exist");
         } else if(trainPart.getTrainId() != 0) {
-            System.out.println("Train Part with this id is already in use");
-            return;
+            throw new IncorrectInputException("Train Part with this id is already in use");
         }
         if (Coach.class.isInstance(trainPart)) {
                     if (connectTrainPart(trainId, trainPart)) {
-                        trainPart.setTrainId(trainId);
+                        //TODO чтобы нельзя было одну часть ав поезд дважды запихнуть                        trainPart.setTrainId(trainId);
                         System.out.println(((Coach) trainPart).getType() + " coach " + trainPartId
-                                + " added to " + trainId);
+                                + " added to train " + trainId);
                         return;
                     } else {
-                        System.out.println("Train Parts Connections don't pass");
-                        return;
+                        throw new IncorrectInputException("Train Parts Connections don't pass");
                     }
         } else if (Engine.class.isInstance(trainPart)) {
                     if (connectTrainPart(trainId, trainPart)) {
@@ -153,9 +137,8 @@ public class Depot {
                                 + " added to " + trainId);
                         return;
                     } else {
-                        System.out.println("Train Parts Connections don't pass");
-                        return;
-                    }
+                        throw new IncorrectInputException("Train Parts Connections don't pass");
+                                            }
         } else if (TrainSet.class.isInstance(trainPart)) {
                     if (connectTrainPart(trainId, trainPart)) {
                         trainPart.setTrainId(trainId);
@@ -163,8 +146,7 @@ public class Depot {
                             + " added to " + trainId);
                         return;
                     } else {
-                        System.out.println("Train Parts Connections don't pass");
-                        return;
+                        throw new IncorrectInputException("Train Parts Connections don't pass");
                     }
         }
     }
@@ -178,7 +160,7 @@ public class Depot {
         str += trains.get(trains.size() - 1);
         return Sorter.sortList(str, new SortTrains());
     }
-    public final void deleteTrain(int trainId) {
+    public final void deleteTrain(int trainId) throws IncorrectInputException{
         for (Train train: trains)
             if (train.getTrainId() == trainId) {
                 train.freeUsedTrainParts();
@@ -186,8 +168,9 @@ public class Depot {
                 System.out.println("OK");
                 return;
             }
+        throw new IncorrectInputException("There are no train with such id");
     }
-    public final TrainPart getTrainPart(String trainPartId) {
+    public final TrainPart getTrainPart(String trainPartId) throws IncorrectInputException{
         if(trainPartId.matches("^W\\d+$"))
             trainPartId = trainPartId.substring(1);
         for(TrainPart trainPart : trainParts) {
@@ -201,16 +184,14 @@ public class Depot {
                 if((((TrainSet) trainPart).getSpecialClass() + "-" + ((TrainSet) trainPart).getSpecialName()).equals(trainPartId))
                     return trainPart;
         }
-        System.out.println("Train Part wasn't found");
-        return null;
+        throw new IncorrectInputException("Train part wasn't found");
     }
-    public final void showTrain(int trainId) {
+    public final void showTrain(int trainId) throws IncorrectInputException{
         Optional<Train> trainToPrint = trains.stream().filter(train -> train.getTrainId() == trainId).findFirst();
         if(trainToPrint.isPresent())
             System.out.println(trainToPrint.get().showTrain());
         else
-            System.out.println("Wrong Train Id");
-
+            throw new IncorrectInputException("Wrong Train Id");
     }
     //use this method for train finding
     public final Train getTrain(int trainId) {
