@@ -6,15 +6,30 @@ import railway.utils.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * class for depot logic, train parts and trains creating
+ * @author Nikita
+ * @version 1
+ */
 public class Depot {
     private ArrayList<TrainPart> trainParts;
     private ArrayList<Train> trains;
 
+    /**
+     * depot constructor
+     */
     public Depot() {
         trainParts = new ArrayList<TrainPart>();
         trains = new ArrayList<Train>();
     }
 
+    /**
+     * create coach command logic
+     * @param coachType type
+     * @param length length
+     * @param forwConnected connection status
+     * @param backConnected connection status
+     */
     public final void createCoach(String coachType, int length, boolean forwConnected, boolean backConnected) {
         int idnext = 0;
         List<TrainPart> coaches = trainParts.stream().filter(tp -> Coach.class.isInstance(tp)).
@@ -30,6 +45,16 @@ public class Depot {
         trainParts.add(coach);
     }
 
+    /**
+     * create engien command logic
+     * @param type engine type
+     * @param engineClass engine class
+     * @param engineName engine name
+     * @param length engine length
+     * @param forwConnected connection status
+     * @param backConnected connection status
+     * @throws IncorrectInputException logic exception
+     */
     public final void createEngine(String type, String engineClass, String engineName,
                              int length, boolean forwConnected, boolean backConnected) throws IncorrectInputException {
         TrainPart engine = new Engine(type, engineClass, engineName, length, forwConnected, backConnected);
@@ -45,6 +70,15 @@ public class Depot {
         trainParts.add(engine);
     }
 
+    /**
+     * create train set ogic
+     * @param trainsetClass train set class
+     * @param trainsetName train set name
+     * @param length train set length
+     * @param forwConnected connection status
+     * @param backConnected connection status
+     * @throws IncorrectInputException logic exceptions
+     */
     public final void createTrainSet(String trainsetClass, String trainsetName,
                          int length, boolean forwConnected, boolean backConnected) throws IncorrectInputException {
         TrainPart trainset = new TrainSet(trainsetClass, trainsetName, length, forwConnected, backConnected);
@@ -60,6 +94,10 @@ public class Depot {
         trainParts.add(trainset);
     }
 
+    /**
+     * list engines logic
+     * @return sorted list of engines
+     */
     public final String listEngines() {
         String str = "";
         Iterator<TrainPart> iter = trainParts.iterator();
@@ -75,7 +113,10 @@ public class Depot {
         return Sorter.sortList(str, new SortSpecialId());
     }
 
-    //train parts id here should be without 'W' prefix
+    /**
+     * list coaches command logic
+     * @return sorted list of coaches
+     */
     public final String listCoaches() {
         String str = "";
         Iterator<TrainPart> iter = trainParts.iterator();
@@ -91,6 +132,10 @@ public class Depot {
         return Sorter.sortList(str, new SortNumCoach());
     }
 
+    /**
+     * list train sets command logic
+     * @return sorted list of train sets
+     */
     public final String listTrainSets() {
         String str = "";
         Iterator<TrainPart> iter = trainParts.iterator();
@@ -106,6 +151,11 @@ public class Depot {
         return Sorter.sortList(str, new SortSpecialId());
     }
 
+    /**
+     * delete train part command logic
+     * @param id of the trainpart
+     * @throws IncorrectInputException logic exception
+     */
     public final void deleteRollingStock(String id) throws IncorrectInputException {
         TrainPart trainPart = getTrainPart(id);
         if (trainPart.getTrainId() != 0) {
@@ -116,6 +166,12 @@ public class Depot {
         }
     }
 
+    /**
+     * add train command logic
+     * @param trainId of the train
+     * @param id of the train part
+     * @throws IncorrectInputException logic exceptions
+     */
     public final void addTrain(int trainId, String id) throws IncorrectInputException {
         if (!istrainIdValid(trainId)) {
             throw new IncorrectInputException("Incorrect input id");
@@ -158,6 +214,10 @@ public class Depot {
         }
     }
 
+    /**
+     * list trains command logic
+     * @return sorted string of trains
+     */
     public final String listTrains() {
         if (trains.size() == 0)
             return "No train exists";
@@ -169,6 +229,11 @@ public class Depot {
         return Sorter.sortList(str, new SortTrains());
     }
 
+    /**
+     * delete train command logic
+     * @param trainId of the train
+     * @throws IncorrectInputException logic exception
+     */
     public final void deleteTrain(int trainId) throws IncorrectInputException {
         for (Train train: trains)
             if (train.getTrainId() == trainId) {
@@ -180,6 +245,12 @@ public class Depot {
         throw new IncorrectInputException("There are no train with such id");
     }
 
+    /**
+     * getter for created train parts
+     * @param id of the train part
+     * @return train part
+     * @throws IncorrectInputException logic exception
+     */
     public final TrainPart getTrainPart(String id) throws IncorrectInputException {
         String trainPartId = id;
         if (trainPartId.matches("^W\\d+$"))
@@ -200,6 +271,11 @@ public class Depot {
         throw new IncorrectInputException("Train part wasn't found");
     }
 
+    /**
+     * show train command logic
+     * @param trainId of the train
+     * @throws IncorrectInputException logic exception
+     */
     public final void showTrain(int trainId) throws IncorrectInputException {
         Optional<Train> trainToPrint = trains.stream().filter(train -> train.getTrainId() == trainId).findFirst();
         if (trainToPrint.isPresent())
@@ -208,6 +284,12 @@ public class Depot {
             throw new IncorrectInputException("Wrong Train Id");
     }
 
+    /**
+     * getter for created train
+     * @param trainId of the train
+     * @return train
+     * @throws IncorrectInputException logic exception
+     */
     public final Train getTrain(int trainId) throws IncorrectInputException {
         for (Train train : trains) {
             if (train.getTrainId() == trainId)
@@ -216,6 +298,12 @@ public class Depot {
         throw new IncorrectInputException("train not found");
     }
 
+    /**
+     * connect train part to the train
+     * @param trainId of the train
+     * @param trainPart to connect
+     * @return true if connected
+     */
     private boolean connectTrainPart(int trainId, TrainPart trainPart) {
         for (Train train : trains) {
             if (train.getTrainId() == trainId)
@@ -252,6 +340,11 @@ public class Depot {
         return true;
     }
 
+    /**
+     * check if the train is a valid train
+     * @param trainId of the train
+     * @return true if is valid
+     */
     private boolean istrainIdValid(int trainId) {
         for (Train train : trains) {
             if (train.getTrainId() == trainId)
@@ -262,6 +355,10 @@ public class Depot {
         return false;
     }
 
+    /**
+     * getter for the next valid train id
+     * @return id
+     */
     private int getNextValidTrainId() {
         int id = 0;
         for (Train train : trains) {
@@ -270,5 +367,4 @@ public class Depot {
         }
         return ++id;
     }
-
 }

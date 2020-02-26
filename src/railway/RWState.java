@@ -2,18 +2,29 @@ package railway;
 
 import edu.kit.informatik.Terminal;
 import railway.utils.*;
-
 import java.util.*;
 
+/**
+ * class for railway state, tracks manipulating and trains moving
+ * @author Nikita
+ * @version 1
+ */
 public final class RWState {
     private ArrayList<Track> tracks;
     private ArrayList<TrainOnRoad> trains;
 
+    /**
+     * railway state constructor
+     */
     public RWState() {
         tracks = new ArrayList<Track>();
         trains = new ArrayList<TrainOnRoad>();
     }
 
+    /**
+     * removing deleted trains
+     * @return struct without train
+     */
     public ArrayList<TrainOnRoad> updTrainsState() {
         ArrayList<TrainOnRoad> temp = new ArrayList<TrainOnRoad>();
         for (TrainOnRoad train : trains) {
@@ -23,6 +34,11 @@ public final class RWState {
         return temp;
     }
 
+    /**
+     * step command logic
+     * @param speed length of step
+     * @throws IncorrectInputException logic exceptions
+     */
     public void step(short speed) throws IncorrectInputException {
         for (Track track : tracks) {
             if (SwitchTrack.class.isInstance(track))
@@ -45,6 +61,12 @@ public final class RWState {
         trains = RWstateUtils.removeCrashedTrains(movingTrains);
     }
 
+    /**
+     * add track command logic
+     * @param start start point
+     * @param end end point
+     * @throws IncorrectInputException logic exception
+     */
     public void addTrack(Point start, Point end) throws IncorrectInputException {
         if (!start.equals(end) && ((start.getY() == end.getY()) || (start.getX() == end.getX()))) {
             Track temp = new Track(start, end);
@@ -74,6 +96,13 @@ public final class RWState {
             throw new IncorrectInputException("invalid track: not straight or 0 length");
     }
 
+    /**
+     * add switch command logic
+     * @param start point
+     * @param end point
+     * @param end2 point
+     * @throws IncorrectInputException logic exception
+     */
     public void addSwitch(Point start, Point end, Point end2) throws IncorrectInputException {
         if ((!start.equals(end) && (start.getY() == end.getY() || (start.getX() == end.getX()))) && (!start.equals(end2)
               && ((start.getY() == end2.getY()) || (start.getX() == end2.getX()))) && !end.equals(end2)) {
@@ -104,6 +133,12 @@ public final class RWState {
                 throw new IncorrectInputException("invalid switch-track: not straight");
     }
 
+    /**
+     * set switch command logic
+     * @param id switch id
+     * @param end point to set
+     * @throws IncorrectInputException logic exception
+     */
     public void setSwitch(int id, Point end) throws IncorrectInputException {
         trains = updTrainsState();
         for (Track track : tracks) {
@@ -135,6 +170,10 @@ public final class RWState {
         throw new IncorrectInputException("Track with this id doesn't exist");
     }
 
+    /**
+     * list tracks command logic
+     * @return sorted list of tracks
+     */
     public String listTracks() {
         String str = "";
         Iterator<Track> iter = tracks.iterator();
@@ -151,11 +190,16 @@ public final class RWState {
         return Sorter.sortList(str, new SortNumTrack());
     }
 
+    /**
+     * delete trak command logic
+     * @param trackId track to delete id
+     * @throws IncorrectInputException logic exception
+     */
     public void deleteTrack(int trackId) throws IncorrectInputException {
         trains = updTrainsState();
         for (Track track : tracks) {
             if (trackId == track.getId()) {
-                if (isRWValidIfTrackDeleted(track)) {
+                if (Track.isRWValidIfTrackDeleted(track, tracks)) {
                     removeConnections(track);
                     int i = 0;
                     for (Track track1 : tracks) {
@@ -173,6 +217,13 @@ public final class RWState {
         throw new IncorrectInputException("track with this id not found");
     }
 
+    /**
+     * put train command logic
+     * @param train to put
+     * @param pointFrom to put
+     * @param dir to put (point)
+     * @throws IncorrectInputException logic exception
+     */
     public void putTrain(Train train, Point pointFrom, Point dir) throws IncorrectInputException {
         trains = updTrainsState();
         Point direction =  RWstateUtils.getPointFromDirection(pointFrom, dir);
@@ -235,6 +286,10 @@ public final class RWState {
         }
     }
 
+    /**
+     * initializing id for the new track
+     * @param track track
+     */
     private void initTrackId(Track track) {
         if (track.getId() == 0) {
             int id = 0;
@@ -246,80 +301,10 @@ public final class RWState {
         }
     }
 
-    private boolean isRWValidIfTrackDeleted(Track track) {
-        for (TrainOnRoad train : trains) {
-            if (RWstateUtils.haveCommonTrack(train, track, tracks)) {
-                return false;
-            }
-        }
-        ArrayList<Track> tempTracks = new ArrayList<Track>(tracks);
-        int i = 0;
-        for (Track track1 : tempTracks) {
-            if (track1.getId() == track.getId())
-                break;
-            i++;
-        }
-        tempTracks.remove(i);
-        ArrayList<Track> endedStruct;
-        if (SwitchTrack.class.isInstance(track)) {
-            Point direction1 = track.getEnd();
-            Point direction2 = track.getStart();
-            Point direction3 = null;
-            if (!((SwitchTrack) track).isSwitchSetted())
-                direction3 = ((SwitchTrack) track).getEnd2();
-            ArrayList<Track> dir1struct = RWstateUtils.getEndedStruct(tempTracks, direction1);
-            ArrayList<Track> dir2struct = RWstateUtils.getEndedStruct(tempTracks, direction2);
-            ArrayList<Track> dir3struct = RWstateUtils.getEndedStruct(tempTracks, direction3);
-            endedStruct = RWstateUtils.combineEndedStructs(dir3struct,
-                    RWstateUtils.combineEndedStructs(dir1struct, dir2struct));
-        } else {
-            Point direction1 = track.getStart();
-            Point direction2 = track.getEnd();
-            endedStruct = RWstateUtils.combineEndedStructs(
-                    RWstateUtils.getEndedStruct(tempTracks, direction1), RWstateUtils.getEndedStruct(
-                            tempTracks, direction2));
-        }
-        endedStruct.add(track);
-        tempTracks = new ArrayList<Track>(tracks);
-        //remove track
-        tempTracks.remove(i);
-        ArrayList<Track> endedStructCheck = RWstateUtils.getEndedStruct(tempTracks, track.getStart());
-        if (endedStructCheck.size() == 0)
-            return true;
-        else {
-            endedStructCheck.add(track);
-            return areSameRWStructs(endedStruct, endedStructCheck);
-        }
-    }
-
-    private boolean areSameRWStructs(ArrayList<Track> struct1, ArrayList<Track> struct2) {
-        if (struct1 == null || struct2 == null)
-            return false;
-        for (Track track1 : struct1) {
-            boolean common = false;
-            for (Track track2 : struct2) {
-                if (track1.getId() == track2.getId()) {
-                    common = true;
-                    break;
-                }
-            }
-            if (!common)
-                return false;
-        }
-        for (Track track2 : struct2) {
-            boolean common = false;
-            for (Track track1 : struct1) {
-                if (track1.getId() == track2.getId()) {
-                    common = true;
-                    break;
-                }
-            }
-            if (!common)
-                return false;
-        }
-        return true;
-    }
-
+    /**
+     * remove connections of the removed track
+     * @param track removed trak
+     */
     private void removeConnections(Track track) {
         if (SwitchTrack.class.isInstance(track)) {
             Point point1 = track.getStart();
@@ -358,6 +343,12 @@ public final class RWState {
         }
     }
 
+    /**
+     * move the train
+     * @param train train
+     * @param speed step
+     * @return moving train
+     */
     private TrainOnRoad move(TrainOnRoad train, int speed) {
         int step = speed;
         if (step != 0) {
@@ -439,6 +430,13 @@ public final class RWState {
             return train;
     }
 
+    /**
+     * check if point with direction point have start direction according to the track
+     * @param track the track
+     * @param pointfrom point
+     * @param direction direcion point
+     * @return true if direction is positiv
+     */
     private boolean isStartDirection(Track track, Point pointfrom, Point direction) {
         boolean dirTrack = (track.getStart().getY() + track.getStart().getX()) - (track.getEnd().getY()
                 + track.getEnd().getX()) > 0;
@@ -446,11 +444,21 @@ public final class RWState {
         return dirTrack == dirPoint;
     }
 
+    /**
+     * remove Track copies from the EndedStruct
+     * @param overextendedField Ended Struct with copies
+     * @return
+     */
     private ArrayList<Track> removeCopies(ArrayList<Track> overextendedField) {
         Set<Track> set = new LinkedHashSet<Track>(overextendedField);
         return new ArrayList<Track>(set);
     }
 
+    /**
+     * for set switch
+     * @param switchTrack track
+     * @return true if crash happens
+     */
     private boolean crashesTrainOnSwitch(Track switchTrack) {
         for (TrainOnRoad train : trains) {
             if (RWstateUtils.haveCommonTrack(train, switchTrack, tracks)) {

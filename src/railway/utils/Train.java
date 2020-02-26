@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 /**
  * class for train = list of train parts
+ * @author Nikita
+ * @version 1
  */
 public final class Train {
     private int trainId = 0;

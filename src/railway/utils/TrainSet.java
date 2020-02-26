@@ -2,6 +2,8 @@ package railway.utils;
 
 /**
  * class for train sets(type of tain part)
+ * @author Nikita
+ * @version 1
  */
 public final class TrainSet extends TrainPart implements SpecialIdable {
     private final String trainsetClass;
@@ -42,6 +44,10 @@ public final class TrainSet extends TrainPart implements SpecialIdable {
         return trainsetName;
     }
 
+    /**
+     * string representation of the trainset
+     * @return trainset info
+     */
     @Override
     public String toString() {
         String str = "";

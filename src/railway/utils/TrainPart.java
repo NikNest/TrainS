@@ -2,6 +2,8 @@ package railway.utils;
 
 /**
  * class for train part
+ * @author Nikita
+ * @version 1
  */
 public class TrainPart {
     private int trainId = 0;

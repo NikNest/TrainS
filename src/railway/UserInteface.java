@@ -5,6 +5,11 @@ import railway.utils.IncorrectInputException;
 import railway.utils.Point;
 import edu.kit.informatik.Terminal;
 
+/**
+ * class implement user interface
+ * @author Nikita
+ * @version 1
+ */
 public class UserInteface {
     private static final String POINT_REGEX = "^\\(-{0,1}\\d+,{1}-{0,1}\\d+\\)$";
     private static final String SPOINT_REGEX = "^\\(-{0,1}\\d+.-{0,1}\\d+\\),\\(-{0,1}\\d+,-{0,1}\\d+\\)$";
@@ -15,12 +20,18 @@ public class UserInteface {
     private RWState state;
     private boolean gameStatus;
 
+    /**
+     * UI constructor
+     */
     public UserInteface() {
         depot = new Depot();
         state = new RWState();
         gameStatus = true;
     }
 
+    /**
+     * method calls nest command until exit
+     */
     public void startGame() {
         while (gameStatus) {
             String userInput = Terminal.readLine();
@@ -31,12 +42,22 @@ public class UserInteface {
         }
     }
 
+    /**
+     * extract Point from String
+     * @param string str
+     * @return point
+     */
     private Point extractPoint(String string) {
         String temp = string.substring(1, string.length() - 1);
         String[] coord = temp.split(",");
         return new Point(Integer.parseInt(coord[0]), Integer.parseInt(coord[1]));
     }
 
+    /**
+     * make action according to command
+     * @param command processed command
+     * @throws IncorrectInputException logic exception
+     */
     private void makeAction(Command command) throws IncorrectInputException {
         if (command.getCommand().equals("ext")) {
             gameStatus = false;
@@ -47,6 +68,11 @@ public class UserInteface {
             runCommandDepot(command);
     }
 
+    /**
+     * run commands of the Depot class
+     * @param command processed command
+     * @throws IncorrectInputException logic exception
+     */
     private void runCommandDepot(Command command) throws IncorrectInputException {
         switch(command.getCommand()) {
             case "cre": //create engine <engineType> <class> <name> <length> <couplingFront> <couplingBack> + cre
@@ -92,6 +118,11 @@ public class UserInteface {
         }
     }
 
+    /**
+     * run commands of the State class
+     * @param command processed command
+     * @throws IncorrectInputException logic exception
+     */
     private void runCommandState(Command command) throws IncorrectInputException {
         switch(command.getCommand()) {
             case "atk": //add track <startpoint> -> <endpoint> + atk
@@ -123,6 +154,13 @@ public class UserInteface {
                 throw new IncorrectInputException();
         }
     }
+
+    /**
+     * create processed command from the input String
+     * @param input raw input
+     * @return processed command
+     * @throws IncorrectInputException logic exception
+     */
     private Command readCoomand(String input) throws IncorrectInputException {
         String userInput = input;
         userInput = userInput.trim();
@@ -153,6 +191,12 @@ public class UserInteface {
         }
     }
 
+    /**
+     * read step-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readStep(String[] str) throws IncorrectInputException {
         if (str.length == 2 && str[1].matches("^-{0,1}\\d+"))
             return new Command(new String[]{str[1]}, "stp");
@@ -160,6 +204,12 @@ public class UserInteface {
             throw new IncorrectInputException();
     }
 
+    /**
+     *  read put-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readPut(String[] str) throws IncorrectInputException {
         if (str.length == 8 && str[1].equals("train") && str[2].matches("\\d+")
                 && str[3].equals("at") && str[4].matches(POINT_REGEX)
@@ -169,6 +219,12 @@ public class UserInteface {
             throw new IncorrectInputException();
     }
 
+    /**
+     * read show-typr command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readShow(String[] str) throws IncorrectInputException {
         if (str.length == 3) {
             if (str[1].equals("train") && str[2].matches("\\d+"))
@@ -179,6 +235,12 @@ public class UserInteface {
             throw new IncorrectInputException();
     }
 
+    /**
+     * read add-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readAdd(String[] str) throws IncorrectInputException {
         if (str.length == 1)
             throw new IncorrectInputException();
@@ -200,6 +262,12 @@ public class UserInteface {
             }
     }
 
+    /**
+     * read delete-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readDelete(String[] str) throws IncorrectInputException {
         if (str.length == 1)
             throw new IncorrectInputException();
@@ -219,6 +287,12 @@ public class UserInteface {
             }
     }
 
+    /**
+     * read  list-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readList(String[] str) throws IncorrectInputException {
         if (str.length == 2)
             if (str[1].equals("tracks"))
@@ -237,6 +311,12 @@ public class UserInteface {
             throw new IncorrectInputException();
     }
 
+    /**
+     * read set-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readSet(String[] str) throws IncorrectInputException {
         if (str.length == 5 && str[1].equals("switch") && str[2].matches("^\\d+")
                 && str[3].equals("position") && str[4].matches(POINT_REGEX)) {
@@ -245,6 +325,12 @@ public class UserInteface {
             throw new IncorrectInputException();
     }
 
+    /**
+     * read create-type command
+     * @param str input
+     * @return processed command
+     * @throws IncorrectInputException semantic exception
+     */
     private Command readCreate(String[] str) throws IncorrectInputException {
         if (str.length < 2)
             throw new IncorrectInputException();

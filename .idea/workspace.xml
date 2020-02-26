@@ -2,57 +2,41 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b7767bb-5664-4ed4-aceb-16fc00a675fa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/railway/utils/RWstateUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/railway/utils/TrainRepres.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/Launcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Depot.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWNetwork.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/UserInteface.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Coach.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Command.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Engine.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/IncorrectInputException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Point.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortNumCoach.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortNumTrack.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortSpecialId.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortTrains.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Sorter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SpecialIdable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SwitchTrack.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Track.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Train.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainOnRoad.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainPart.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainRepres.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainSet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/Depot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/Depot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/RWNetwork.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/RWState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/RWState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/UserInteface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/UserInteface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Coach.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Coach.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Engine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/IncorrectInputException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/IncorrectInputException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Point.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortNumCoach.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortNumCoach.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortNumTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortNumTrack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortSpecialId.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortSpecialId.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortTrains.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortTrains.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Sorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Sorter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SpecialIdable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SpecialIdable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SwitchTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SwitchTrack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Track.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Train.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainOnRoad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainOnRoad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainPart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainPart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainRepres.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway.zip" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/Depot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/Depot.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/Launcher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/RWState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/RWState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/UserInteface.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/UserInteface.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/IncorrectInputException.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/IncorrectInputException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Point.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Point.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/RWstateUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/RWstateUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortAlgorithm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortAlgorithm.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortNumCoach.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortNumCoach.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortNumTrack.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortNumTrack.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortSpecialId.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortSpecialId.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortTrains.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SortTrains.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Sorter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Sorter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SpecialIdable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SpecialIdable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SwitchTrack.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/SwitchTrack.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Track.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Track.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Train.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/Train.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainOnRoad.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainOnRoad.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainPart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainPart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainRepres.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainRepres.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/railway/utils/TrainSet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway.zip" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/Depot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/Depot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/RWState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/RWState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/UserInteface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/UserInteface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/SortSpecialId.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortSpecialId.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Track.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Train.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/TrainOnRoad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainOnRoad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/TrainPart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainPart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/TrainRepres.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainRepres.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/railway/utils/TrainSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainSet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,22 +143,22 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="737" y="283" width="424" height="513" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1582643877074" />
-    <state width="1807" height="303" key="GridCell.Tab.0.bottom" timestamp="1582718966202">
+    <state width="1807" height="303" key="GridCell.Tab.0.bottom" timestamp="1582730314034">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="303" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966202" />
-    <state width="1807" height="303" key="GridCell.Tab.0.center" timestamp="1582718966200">
+    <state width="1807" height="303" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1582730314034" />
+    <state width="1807" height="303" key="GridCell.Tab.0.center" timestamp="1582730314032">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="303" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966200" />
-    <state width="1807" height="303" key="GridCell.Tab.0.left" timestamp="1582718966198">
+    <state width="1807" height="303" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1582730314032" />
+    <state width="1807" height="303" key="GridCell.Tab.0.left" timestamp="1582730314031">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="303" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966198" />
-    <state width="1807" height="303" key="GridCell.Tab.0.right" timestamp="1582718966201">
+    <state width="1807" height="303" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1582730314031" />
+    <state width="1807" height="303" key="GridCell.Tab.0.right" timestamp="1582730314033">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="303" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966201" />
+    <state width="1807" height="303" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1582730314033" />
     <state x="482" y="187" key="SettingsEditor" timestamp="1582643891276">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

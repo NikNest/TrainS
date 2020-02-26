@@ -1,5 +1,7 @@
 package railway.utils;
 
+import java.util.ArrayList;
+
 /**
  * class for track of railway
  * @author Nikita
@@ -32,7 +34,7 @@ public class Track {
 
     /**
      * setter for track end
-     * @param end
+     * @param end point
      */
     public void setEnd(Point end) {
         this.end = end;
@@ -95,7 +97,7 @@ public class Track {
 
     /**
      * return x if track vertical else y
-     * @return
+     * @return coord
      */
     public int getSameCoord() {
         if (start.getX() == end.getX())
@@ -168,6 +170,87 @@ public class Track {
         } else
             return track.equals(this);
 
+    }
+
+    /**
+     * check if we can delete this track from tracks
+     * @param track deleted track
+     * @param tracks tracks of railway
+     * @return true if we can delete this track
+     */
+    public static boolean isRWValidIfTrackDeleted(Track track, ArrayList<Track> tracks) {
+        ArrayList<Track> tempTracks = new ArrayList<Track>(tracks);
+        int i = 0;
+        for (Track track1 : tempTracks) {
+            if (track1.getId() == track.getId())
+                break;
+            i++;
+        }
+        tempTracks.remove(i);
+        ArrayList<Track> endedStruct;
+        if (SwitchTrack.class.isInstance(track)) {
+            Point direction1 = track.getEnd();
+            Point direction2 = track.getStart();
+            Point direction3 = null;
+            if (!((SwitchTrack) track).isSwitchSetted())
+                direction3 = ((SwitchTrack) track).getEnd2();
+            ArrayList<Track> dir1struct = RWstateUtils.getEndedStruct(tempTracks, direction1);
+            ArrayList<Track> dir2struct = RWstateUtils.getEndedStruct(tempTracks, direction2);
+            ArrayList<Track> dir3struct = RWstateUtils.getEndedStruct(tempTracks, direction3);
+            endedStruct = RWstateUtils.combineEndedStructs(dir3struct,
+                    RWstateUtils.combineEndedStructs(dir1struct, dir2struct));
+        } else {
+            Point direction1 = track.getStart();
+            Point direction2 = track.getEnd();
+            endedStruct = RWstateUtils.combineEndedStructs(
+                    RWstateUtils.getEndedStruct(tempTracks, direction1), RWstateUtils.getEndedStruct(
+                            tempTracks, direction2));
+        }
+        endedStruct.add(track);
+        tempTracks = new ArrayList<Track>(tracks);
+        //remove track
+        tempTracks.remove(i);
+        ArrayList<Track> endedStructCheck = RWstateUtils.getEndedStruct(tempTracks, track.getStart());
+        if (endedStructCheck.size() == 0)
+            return true;
+        else {
+            endedStructCheck.add(track);
+            return areSameEndedStructs(endedStruct, endedStructCheck);
+        }
+    }
+
+    /**
+     * check if the ended structs are the same(for validity of track delete check)
+     * @param struct1 first
+     * @param struct2 second
+     * @return true if the structs are the same
+     */
+    public static boolean areSameEndedStructs(ArrayList<Track> struct1, ArrayList<Track> struct2) {
+        if (struct1 == null || struct2 == null)
+            return false;
+        for (Track track1 : struct1) {
+            boolean common = false;
+            for (Track track2 : struct2) {
+                if (track1.getId() == track2.getId()) {
+                    common = true;
+                    break;
+                }
+            }
+            if (!common)
+                return false;
+        }
+        for (Track track2 : struct2) {
+            boolean common = false;
+            for (Track track1 : struct1) {
+                if (track1.getId() == track2.getId()) {
+                    common = true;
+                    break;
+                }
+            }
+            if (!common)
+                return false;
+        }
+        return true;
     }
 
     /**

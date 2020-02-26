@@ -2,6 +2,8 @@ package railway.utils;
 
 /**
  * class for moving trains
+ * @author Nikita
+ * @version 1
  */
 public final class TrainOnRoad {
     private Train train;
@@ -115,7 +117,8 @@ public final class TrainOnRoad {
      * @param newHeadTrack head track
      * @return point
      */
-    public static Point countHeadPoint(boolean startDirection, boolean positivDirection, int stepLength, Track newHeadTrack) {
+    public static Point countHeadPoint(boolean startDirection, boolean positivDirection,
+                                       int stepLength, Track newHeadTrack) {
         Point newHeadPoint;
         if (stepLength == 0) {
             if (startDirection)

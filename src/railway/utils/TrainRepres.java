@@ -2,6 +2,8 @@ package railway.utils;
 
 /**
  * string representations of the train parts
+ * @author Nikita
+ * @version 1
  */
 public final class TrainRepres {
     /**

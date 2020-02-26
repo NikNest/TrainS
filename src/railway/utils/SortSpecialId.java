@@ -1,10 +1,12 @@
 package railway.utils;
+
 /**
  * sort trainparts with class and name
  * @author Nikita
  * @version 1
  */
 public final class SortSpecialId extends SortAlgorithm {
+
     /**
      * compare algorithm
      * @param s first str
