@@ -2,29 +2,57 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b7767bb-5664-4ed4-aceb-16fc00a675fa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/RailWay/UserInteface.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/RailWay/utils/Command.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/RailWay/utils/IncorrectInputException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/railway/utils/RWstateUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/railway/utils/TrainRepres.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/edu/kit/informatik/Terminal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/Launcher.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Depot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Depot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Coach.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Coach.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Engine.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Engine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortNumTrack.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortNumTrack.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SwitchTrack.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SwitchTrack.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Track.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Track.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainOnRoad.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainOnRoad.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainPart.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainPart.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainRepres.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainRepres.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainSet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/Depot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/Depot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/RWState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/RWState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Coach.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/Coach.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SwitchTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/SwitchTrack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/RailWay/utils/Track.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/Launcher.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/Depot.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWNetwork.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/RWState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/UserInteface.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Coach.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Command.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Engine.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/IncorrectInputException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Point.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortAlgorithm.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortNumCoach.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortNumTrack.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortSpecialId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SortTrains.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Sorter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SpecialIdable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/SwitchTrack.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Track.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/Train.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainOnRoad.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainPart.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainRepres.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AbAuf1/RailWay/utils/TrainSet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/Depot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/Depot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/RWNetwork.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/RWState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/RWState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/UserInteface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/UserInteface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Coach.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Coach.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Engine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Engine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/IncorrectInputException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/IncorrectInputException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Point.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortNumCoach.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortNumCoach.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortNumTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortNumTrack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortSpecialId.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortSpecialId.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SortTrains.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SortTrains.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Sorter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Sorter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SpecialIdable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SpecialIdable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/SwitchTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/SwitchTrack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Track.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/Train.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainOnRoad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainOnRoad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainPart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainPart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainRepres.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/RailWay/utils/TrainSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/railway/utils/TrainSet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +94,7 @@
   </component>
   <component name="RunManager">
     <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Launcher" />
+      <option name="MAIN_CLASS_NAME" value="railway.Launcher" />
       <module name="AbAuf1" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -119,6 +147,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="745" y="160" width="476" height="786" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1582115021211" />
+    <state x="723" y="283" width="530" height="539" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1582716164951">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="723" y="283" width="530" height="539" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/67.27.1853.1053@67.27.1853.1053" timestamp="1582716164951" />
     <state x="167" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1582503585389">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -127,37 +159,41 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="737" y="283" width="424" height="513" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1582643877074" />
-    <state width="1807" height="341" key="GridCell.Tab.0.bottom" timestamp="1582643907263">
+    <state width="1807" height="303" key="GridCell.Tab.0.bottom" timestamp="1582718966202">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="341" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1582643907263" />
-    <state width="1807" height="341" key="GridCell.Tab.0.center" timestamp="1582643907261">
+    <state width="1807" height="303" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966202" />
+    <state width="1807" height="303" key="GridCell.Tab.0.center" timestamp="1582718966200">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="341" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1582643907261" />
-    <state width="1807" height="341" key="GridCell.Tab.0.left" timestamp="1582643907260">
+    <state width="1807" height="303" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966200" />
+    <state width="1807" height="303" key="GridCell.Tab.0.left" timestamp="1582718966198">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="341" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1582643907260" />
-    <state width="1807" height="341" key="GridCell.Tab.0.right" timestamp="1582643907262">
+    <state width="1807" height="303" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966198" />
+    <state width="1807" height="303" key="GridCell.Tab.0.right" timestamp="1582718966201">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="341" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1582643907262" />
+    <state width="1807" height="303" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1582718966201" />
     <state x="482" y="187" key="SettingsEditor" timestamp="1582643891276">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1582643891276" />
-    <state x="649" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1582639178914">
+    <state x="649" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1582705136333">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="649" y="380" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1582639178914" />
+    <state x="649" y="380" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1582705136333" />
+    <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1582712169171">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/67.27.1853.1053@67.27.1853.1053" timestamp="1582712169171" />
     <state x="657" y="253" key="run.anything.popup" timestamp="1582572050132">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="657" y="253" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1582572050132" />
-    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1582557727992">
+    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1582717538151">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1582557727992" />
+    <state x="656" y="257" width="672" height="678" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1582717538151" />
   </component>
 </project>
